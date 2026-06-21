@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-void: #07070b;
+  --color-surface: #0e0e17;
+  --color-surface-2: #14141f;
+  --color-line: #20212f;
+  --color-paper: #f2f2f7;
+  --color-mute: #9696a8;
+  --color-blue: #2e8fff;
+  --color-violet: #b23bff;
+
+  --font-display: "Space Grotesk Variable", "Space Grotesk", ui-sans-serif, sans-serif;
+  --font-body: "Inter Variable", "Inter", ui-sans-serif, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+}
+
+:root {
+  --cut: 16px;
+  --cut-sm: 10px;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-void);
+  color: var(--color-paper);
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: rgba(178, 59, 255, 0.35);
+  color: #fff;
+}
+
+/* ---------- Signature motif: opposing-corner cut, echoing the X mark ---------- */
+.cut {
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut))
+  );
+}
+
+.cut-sm {
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--cut-sm)) 0,
+    100% var(--cut-sm),
+    100% 100%,
+    var(--cut-sm) 100%,
+    0 calc(100% - var(--cut-sm))
+  );
+}
+
+.cut-reverse {
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+}
+
+/* ---------- Gradient utilities ---------- */
+.text-gradient {
+  background: linear-gradient(115deg, #4fa6ff 0%, #8a6bff 50%, #c93bff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-border {
+  position: relative;
+  background: linear-gradient(140deg, rgba(46, 143, 255, 0.55), rgba(178, 59, 255, 0.55));
+  padding: 1px;
+}
+
+.gradient-border > * {
+  background: var(--color-surface);
+}
+
+/* ---------- Blueprint grid backdrop ---------- */
+.bp-grid {
+  background-image:
+    linear-gradient(to right, rgba(180, 190, 220, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(180, 190, 220, 0.055) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.bp-grid-fine {
+  background-image:
+    linear-gradient(to right, rgba(180, 190, 220, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(180, 190, 220, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ---------- Motion ---------- */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -18px, 0) rotate(1.2deg); }
+}
+
+.animate-drift {
+  animation: drift 14s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 90s linear infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 6s ease-in-out infinite;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 0;
+}

@@ -1,0 +1,21 @@
+import Navbar from "@/components/Navbar";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
+
+export const metadata = {
+  title: "Contact — PragnyX",
+  description:
+    "Reach the PragnyX team about products, custom builds, or PragnyX Learning. We respond to every message.",
+};
+
+export default function ContactPage() {
+  return (
+    <>
+      <Navbar />
+      <main className="flex-1 pt-20">
+        <Contact />
+      </main>
+      <Footer />
+    </>
+  );
+}

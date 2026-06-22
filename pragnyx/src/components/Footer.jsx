@@ -26,8 +26,8 @@ const COLUMNS = [
 ];
 
 const SOCIALS = [
-  { icon: LinkedInIcon, label: "LinkedIn", href: "#" },
-  { icon: InstagramIcon, label: "Instagram", href: "#" },
+  { icon: LinkedInIcon, label: "LinkedIn", href: "https://www.linkedin.com/company/pragnyx/" },
+  { icon: InstagramIcon, label: "Instagram", href: "https://www.instagram.com/pragnyx?igsh=cDkyYnBjcXJsYjJ0" },
 ];
 
 export default function Footer() {
@@ -49,6 +49,7 @@ export default function Footer() {
               Wisdom for the next frontier. Products, builds, and 1:1
               mentorship for people engineering what&apos;s next.
             </p>
+            
             <div className="mt-6 flex gap-3">
               {SOCIALS.map(({ icon: Icon, label, href }) => (
                 <a
@@ -93,15 +94,17 @@ export default function Footer() {
               nothing else.
             </p>
             <NewsletterForm compact />
+            
             <a
-              href="mailto:hello@pragnyx.in"
+              href="mailto:hello.pragnyx@gmail.com"
               className="mt-5 inline-flex items-center gap-2 text-sm text-mute hover:text-paper transition-colors"
             >
               <Mail size={14} strokeWidth={1.5} />
-              hello@pragnyx.in
+              hello.pragnyx@gmail.com
             </a>
           </div>
         </div>
+        
 
         <div className="mt-14 pt-8 border-t border-line flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-xs text-mute">

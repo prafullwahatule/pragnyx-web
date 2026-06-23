@@ -12,56 +12,91 @@ export const NAV_LINKS = [
 
 export const PRODUCTS = [
   {
-    slug: "atlas",
-    name: "Atlas",
-    tag: "Reasoning Infrastructure",
+    slug: "business-intelligence",
+    name: "Business Intelligence Solution",
+    tag: "BI & Reporting",
     summary:
-      "A reasoning layer that sits between your data and your decisions — built for teams who need explainable, auditable logic at scale.",
+      "Turn scattered spreadsheets and disconnected dashboards into one clear, decision-ready view of how your business is actually performing.",
     bullets: [
-      "Composable reasoning graphs, not black-box outputs",
-      "Native audit trail for every inference",
-      "Deploys on your cloud or ours",
+      "Live dashboards pulled from every source you already use",
+      "KPI tracking built around your business, not a generic template",
+      "Self-serve reporting your team can use without asking IT",
     ],
     color: "blue",
   },
   {
-    slug: "lumen",
-    name: "Lumen",
-    tag: "Knowledge Engine",
+    slug: "software-solutions",
+    name: "Software Solutions",
+    tag: "Custom Engineering",
     summary:
-      "Turns scattered institutional knowledge — docs, tickets, calls, code — into a single searchable, continuously-updating brain for your org.",
+      "Custom software built around how your team actually works — from internal tools and web platforms to full product builds, designed to last.",
     bullets: [
-      "Connects to 40+ sources out of the box",
-      "Cites everything it tells you",
-      "Live sync, not a quarterly re-index",
+      "Web, mobile, and internal tools built end-to-end",
+      "Architecture that scales with you, not against you",
+      "Your team owns the code — no lock-in, ever",
     ],
     color: "violet",
   },
   {
-    slug: "forge",
-    name: "Forge",
-    tag: "Builder Platform",
+    slug: "data-intelligence",
+    name: "Data Intelligence",
+    tag: "Data Engineering & Analytics",
     summary:
-      "The fastest path from a rough idea to a working internal tool. Describe the workflow, Forge assembles the app, your team owns the code.",
+      "We turn raw, messy data into a single source of truth — clean pipelines, reliable warehousing, and analytics your team can actually trust.",
     bullets: [
-      "Generates real, exportable source — no lock-in",
-      "Plugs into your existing auth and data",
-      "From prompt to staging in under an hour",
+      "End-to-end pipelines from raw data to clean insight",
+      "Warehousing and modeling built to hold up at scale",
+      "Analytics that explain the 'why', not just the 'what'",
     ],
     color: "blue",
   },
   {
-    slug: "signal",
-    name: "Signal",
-    tag: "Decision Monitoring",
+    slug: "ai-automation",
+    name: "AI & Automation",
+    tag: "Applied AI",
     summary:
-      "Watches the metrics that matter and tells you why they moved — before the weekly meeting, not during the postmortem.",
+      "We design and ship AI-driven automation that removes the repetitive work slowing your team down — reasoned through, not bolted on as a gimmick.",
     bullets: [
-      "Anomaly detection tuned to your baseline",
-      "Plain-language root-cause summaries",
-      "Slack, email, and on-call ready",
+      "Workflow automation for the tasks eating your team's time",
+      "Applied AI features grounded in your real data",
+      "Explainable outputs — built to be trusted, not just fast",
     ],
     color: "violet",
+  },
+];
+
+export const FOUNDER = {
+  name: "Founder Name",
+  title: "Founder & CEO, PragnyX",
+  bio: "Started PragnyX on a simple frustration: most software ships fast and gets patched forever, instead of being reasoned through once. Now leads the studio's product, engineering, and learning lines with that same standard.",
+  quote:
+    "We don't ship the first idea that works. We ship the idea we can explain, defend, and stand behind a year from now.",
+};
+
+export const TEAM = [
+  {
+    id: "team-1",
+    name: "Team Member One",
+    role: "Engineering Lead",
+    bio: "Leads core product engineering across the platform, with a focus on systems that stay reliable as they scale.",
+  },
+  {
+    id: "team-2",
+    name: "Team Member Two",
+    role: "Data & AI Lead",
+    bio: "Builds the data pipelines and applied-AI features that power Data Intelligence and AI & Automation.",
+  },
+  {
+    id: "team-3",
+    name: "Team Member Three",
+    role: "Design Lead",
+    bio: "Shapes the interface layer across every PragnyX product, custom build, and client engagement.",
+  },
+  {
+    id: "team-4",
+    name: "Team Member Four",
+    role: "Client Solutions Lead",
+    bio: "Works directly with client teams to scope, build, and ship Software Solutions and BI engagements.",
   },
 ];
 
@@ -254,30 +289,38 @@ export const LEARNING_PLANS = [
 export const JOBS = [
   {
     id: "job-1",
-    title: "Senior Backend Engineer — Atlas",
+    title: "Full-Stack Developer — Website & Platform",
     location: "Remote",
     type: "Full-time",
-    summary: "Own core reasoning-graph infrastructure that decisions at client companies run on top of.",
+    summary:
+      "Build, maintain, and scale the PragnyX website and internal platform end-to-end — frontend, backend, deployments, and everything in between.",
   },
   {
     id: "job-2",
-    title: "Applied AI Engineer — Lumen",
+    title: "Senior Backend Engineer — Data Intelligence",
     location: "Remote",
     type: "Full-time",
-    summary: "Build retrieval and citation systems that make institutional knowledge searchable and trustworthy.",
+    summary: "Own the core data pipelines and infrastructure that client Data Intelligence engagements run on top of.",
   },
   {
     id: "job-3",
+    title: "Applied AI Engineer — AI & Automation",
+    location: "Remote",
+    type: "Full-time",
+    summary: "Build the automation and applied-AI systems that make client workflows faster and more reliable.",
+  },
+  {
+    id: "job-4",
     title: "Mentor — Frontend & Design Systems",
     location: "Remote, part-time",
     type: "Contract",
     summary: "Teach 1:1 inside PragnyX Learning. Flexible hours, you set your own availability.",
   },
   {
-    id: "job-4",
+    id: "job-5",
     title: "Product Designer",
     location: "Remote",
     type: "Full-time",
-    summary: "Shape the interface layer across Atlas, Lumen, Forge, and Signal.",
+    summary: "Shape the interface layer across Business Intelligence, Software Solutions, Data Intelligence, and AI & Automation.",
   },
 ];

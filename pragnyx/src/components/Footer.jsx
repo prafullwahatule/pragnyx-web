@@ -6,12 +6,12 @@ import NewsletterForm from "./NewsletterForm";
 
 const COLUMNS = [
   {
-    heading: "Product",
+    heading: "Services",
     links: [
-      { href: "/solutions#atlas", label: "Atlas" },
-      { href: "/solutions#lumen", label: "Lumen" },
-      { href: "/solutions#forge", label: "Forge" },
-      { href: "/solutions#signal", label: "Signal" },
+      { href: "/solutions#business-intelligence", label: "Business Intelligence" },
+      { href: "/solutions#software-solutions", label: "Software Solutions" },
+      { href: "/solutions#data-intelligence", label: "Data Intelligence" },
+      { href: "/solutions#ai-automation", label: "AI & Automation" },
     ],
   },
   {
@@ -110,9 +110,17 @@ export default function Footer() {
           <span className="text-xs text-mute">
             © {new Date().getFullYear()} PragnyX. All rights reserved.
           </span>
-          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-mute">
-            Engineered for the future
-          </span>
+          <div className="flex items-center gap-6">
+            <Link href="/privacy-policy" className="text-xs text-mute hover:text-paper transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms-conditions" className="text-xs text-mute hover:text-paper transition-colors">
+              Terms &amp; Conditions
+            </Link>
+            <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-mute">
+              Engineered for the future
+            </span>
+          </div>
         </div>
       </div>
     </footer>

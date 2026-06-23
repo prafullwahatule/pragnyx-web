@@ -8,13 +8,13 @@ const TIMELINE = [
   },
   {
     year: "2023",
-    title: "Atlas ships to its first client",
-    copy: "A mid-size logistics company becomes the first team to run real decisions through Atlas's reasoning graphs in production.",
+    title: "First Software Solutions client goes live",
+    copy: "A mid-size logistics company becomes the first team to run a custom-built internal platform shipped end-to-end by PragnyX.",
   },
   {
     year: "2024",
-    title: "Lumen and Forge join the lineup",
-    copy: "As client work repeated the same two problems — buried knowledge and slow internal tools — Lumen and Forge are built to solve them directly.",
+    title: "Business Intelligence and Data Intelligence join the lineup",
+    copy: "As client work repeated the same two problems — scattered reporting and messy data — these two services are built to solve them directly.",
   },
   {
     year: "2025",
@@ -23,8 +23,8 @@ const TIMELINE = [
   },
   {
     year: "2026",
-    title: "Signal launches; 120+ teams onboarded",
-    copy: "Signal rounds out the product line, and PragnyX crosses 120 teams across products, custom builds, and learning combined.",
+    title: "AI & Automation launches; 120+ teams onboarded",
+    copy: "AI & Automation rounds out the service line, and PragnyX crosses 120 teams across services, custom builds, and learning combined.",
   },
 ];
 

@@ -2,6 +2,8 @@ import Navbar from "@/components/Navbar";
 import PageHero from "@/components/PageHero";
 import Stats from "@/components/Stats";
 import ValuesGrid from "@/components/ValuesGrid";
+import Founder from "@/components/Founder";
+import Team from "@/components/Team";
 import Timeline from "@/components/Timeline";
 import ContactTeaser from "@/components/ContactTeaser";
 import Footer from "@/components/Footer";
@@ -34,6 +36,8 @@ export default function AboutPage() {
         </PageHero>
         <Stats />
         <ValuesGrid />
+        <Founder />
+        <Team />
         <Timeline />
         <ContactTeaser />
       </main>

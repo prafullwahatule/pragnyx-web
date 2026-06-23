@@ -19,7 +19,7 @@ export default function ProductsTeaser() {
                 </span>
               </div>
               <h2 className="font-display font-medium text-3xl sm:text-4xl leading-[1.15] tracking-tight max-w-xl">
-                Four products. One way of thinking.
+                Four services. One way of thinking.
               </h2>
             </div>
             <Link

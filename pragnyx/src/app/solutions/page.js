@@ -10,7 +10,7 @@ import { ArrowUpRight } from "lucide-react";
 export const metadata = {
   title: "Solutions — PragnyX",
   description:
-    "Atlas, Lumen, Forge, and Signal — four products built on the same idea: deliberate, explainable thinking applied to hard problems.",
+    "Business Intelligence, Software Solutions, Data Intelligence, and AI & Automation — four services built on the same idea: deliberate, explainable thinking applied to hard problems.",
 };
 
 export default function SolutionsPage() {
@@ -20,7 +20,7 @@ export default function SolutionsPage() {
       <main className="flex-1">
         <PageHero
           eyebrow="Solutions"
-          title="Four products. One way of thinking."
+          title="Four services. One way of thinking."
           description="Every PragnyX product starts from the same question: what would this look like if it were reasoned through properly, instead of shipped fast and patched later?"
         >
           <Link

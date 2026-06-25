@@ -1,4 +1,5 @@
-import { ArrowUpRight, GraduationCap } from "lucide-react";
+import { ArrowUpRight, GraduationCap, BadgeCheck } from "lucide-react";
+import Link from "next/link";
 import Reveal from "./Reveal";
 
 export default function LearningHero({ mentorCount }) {
@@ -46,9 +47,18 @@ export default function LearningHero({ mentorCount }) {
               See pricing
             </a>
           </div>
-          <p className="mt-7 font-mono text-[11px] tracking-[0.14em] uppercase text-mute opacity-0 animate-[fade-up_0.7s_0.4s_ease-out_forwards]">
-            {mentorCount} mentors currently teaching · sessions booked weekly
-          </p>
+          <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 opacity-0 animate-[fade-up_0.7s_0.4s_ease-out_forwards]">
+            <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-mute">
+              {mentorCount} mentors currently teaching · sessions booked weekly
+            </p>
+            <Link
+              href="/learning/certificate/PXL-PBI-2026-000"
+              className="inline-flex items-center gap-1.5 font-mono text-[11px] tracking-[0.14em] uppercase text-blue hover:text-gradient transition-colors"
+            >
+              <BadgeCheck size={13} strokeWidth={1.75} />
+              See a sample certificate
+            </Link>
+          </div>
         </div>
       </div>
     </section>

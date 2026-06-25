@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>PragnyX Learning Certificate</title>
+<style>
+  @font-face {
+    font-family: "Inter";
+    src: local("Inter");
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 1216px;
+    height: 720px;
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #16284a;
+  }
+
+  .sheet {
+    position: relative;
+    width: 1216px;
+    height: 720px;
+    background: #faf6ee;
+    overflow: hidden;
+  }
+
+  /* outer thin gold rule */
+  .frame-outer {
+    position: absolute;
+    inset: 18px;
+    border: 2px solid #c8a13a;
+  }
+
+  /* inner navy double rule */
+  .frame-inner {
+    position: absolute;
+    inset: 28px;
+    border: 3px solid #16284a;
+  }
+  .frame-inner::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid #16284a;
+  }
+
+  .diamond {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #c8a13a;
+    transform: rotate(45deg);
+  }
+  .diamond.tl { top: 38px; left: 38px; }
+  .diamond.tr { top: 38px; right: 38px; }
+  .diamond.bl { bottom: 38px; left: 38px; }
+  .diamond.br { bottom: 38px; right: 38px; }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    padding: 56px 90px 0 90px;
+    text-align: center;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 18px;
+  }
+  .logo-text {
+    font-family: "Inter", sans-serif;
+    font-weight: 800;
+    font-size: 34px;
+    letter-spacing: -0.5px;
+    color: #1a1a2e;
+  }
+  .logo-x {
+    font-family: "Inter", sans-serif;
+    font-weight: 800;
+    font-size: 34px;
+    background: linear-gradient(115deg, #2e8fff 0%, #8a4bff 55%, #b23bff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .cert-title {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: #16284a;
+    margin-bottom: 30px;
+  }
+
+  .intro {
+    font-size: 16px;
+    color: #3a3a4a;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  .student-name {
+    font-size: 42px;
+    font-weight: 800;
+    color: #16284a;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #c8a13a;
+    display: inline-block;
+    margin: 0 auto 22px auto;
+    min-width: 420px;
+  }
+
+  .body-line {
+    font-size: 15.5px;
+    color: #2b2b3a;
+    line-height: 1.6;
+    max-width: 980px;
+    margin: 0 auto 14px auto;
+    white-space: nowrap;
+  }
+  .body-line b { color: #16284a; font-weight: 700; }
+
+  .modules-line {
+    font-size: 13px;
+    color: #6b6b7d;
+    line-height: 1.6;
+    max-width: 760px;
+    margin: 0 auto 20px auto;
+  }
+
+  .meta-row {
+    font-size: 13.5px;
+    color: #16284a;
+    margin-bottom: 6px;
+  }
+  .meta-row b { font-weight: 700; }
+  .meta-sep { color: #c8a13a; margin: 0 14px; }
+
+  .footer-rule {
+    border-top: 1px solid #d8cfb8;
+    margin: 22px 90px 0 90px;
+  }
+
+  .footer-grid {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 22px 90px 0 90px;
+  }
+
+  .sig-block { width: 300px; text-align: center; }
+  .sig-name {
+    font-size: 19px;
+    font-weight: 700;
+    font-style: italic;
+    color: #16284a;
+    border-bottom: 1px solid #16284a;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+  .sig-label { font-size: 12px; font-weight: 700; color: #1a1a2e; }
+  .sig-sub { font-size: 11px; color: #8a8a9a; margin-top: 2px; }
+
+  .qr-block { width: 240px; text-align: center; }
+  .qr-img {
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 8px auto;
+    display: block;
+  }
+  .qr-id { font-size: 12px; font-weight: 700; color: #16284a; }
+  .qr-issued { font-size: 11px; font-weight: 700; color: #16284a; margin-top: 2px; }
+  .qr-scan { font-size: 10.5px; font-style: italic; color: #9a9aa8; margin-top: 3px; }
+
+  .org-block { width: 300px; text-align: center; }
+  .org-link {
+    font-size: 19px;
+    font-weight: 700;
+    font-style: italic;
+    color: #16284a;
+    text-decoration: none;
+    border-bottom: 1px solid #16284a;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+  .org-label { font-size: 12px; font-weight: 700; color: #1a1a2e; }
+  .org-sub { font-size: 11px; color: #8a8a9a; margin-top: 2px; }
+
+  .bottom-bar {
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    bottom: 30px;
+    text-align: center;
+    font-size: 11px;
+    font-style: italic;
+    color: #16284a;
+    padding: 10px 0;
+    border-top: 1px solid #d8cfb8;
+  }
+  .bottom-bar .sep { color: #c8a13a; margin: 0 10px; }
+</style>
+</head>
+<body>
+  <div class="sheet">
+    <div class="frame-outer"></div>
+    <div class="frame-inner"></div>
+    <div class="diamond tl"></div>
+    <div class="diamond tr"></div>
+    <div class="diamond bl"></div>
+    <div class="diamond br"></div>
+
+    <div class="content">
+      <div class="logo-row">
+        <span class="logo-text">Pragny</span><span class="logo-x">X</span>
+      </div>
+
+      <div class="cert-title">CERTIFICATE OF COMPLETION</div>
+
+      <div class="intro">This is to certify that</div>
+      <div class="student-name">{{STUDENT_NAME}}</div>
+
+      <div class="body-line">
+        has successfully completed the <b>{{COURSE_TITLE}}</b> conducted by
+        <a href="{{LEARNING_URL}}" target="_blank" rel="noopener" style="color:#16284a; text-decoration:none; font-weight:700;">PragnyX Learning</a>.
+      </div>
+
+      <div class="modules-line">{{MODULES_LINE}}</div>
+
+      <div class="meta-row">
+        <b>Duration:</b> {{DURATION}} <span class="meta-sep">|</span> <b>Training Type:</b> {{TRAINING_TYPE}}
+      </div>
+      <div class="meta-row"><b>Date of Completion:</b> {{COMPLETION_DATE}}</div>
+    </div>
+
+    <div class="footer-rule"></div>
+
+    <div class="footer-grid">
+      <div class="sig-block">
+        <div class="sig-name">{{TRAINER_NAME}}</div>
+        <div class="sig-label">Trainer Signature</div>
+        <div class="sig-sub">Trainer, PragnyX Learning</div>
+      </div>
+
+      <div class="qr-block">
+        <img class="qr-img" src="{{QR_DATA_URI}}" alt="Scan to verify" />
+        <div class="qr-id">Certificate ID: {{CERT_ID}}</div>
+        <div class="qr-issued">Issued On: {{ISSUED_ON}}</div>
+        <div class="qr-scan">Scan to verify</div>
+      </div>
+
+      <div class="org-block">
+        <a class="org-link" href="{{LEARNING_URL}}" target="_blank" rel="noopener">PragnyX Learning</a>
+        <div class="org-label">Authorized By</div>
+        <div class="org-sub">PragnyX Learning</div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      PragnyX Learning <span class="sep">•</span> Learn Today, Grow Tomorrow <span class="sep">•</span> Empowering Tomorrow's Professionals
+    </div>
+  </div>
+</body>
+</html>

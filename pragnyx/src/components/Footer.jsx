@@ -30,7 +30,7 @@ const COLUMNS = [
     links: [
       { href: "/about", label: "About" },
       { href: "/careers", label: "Careers" },
-      { href: "/learning", label: "PragnyX Learning" },
+      { href: "/learning", label: "PragnyX Learning", external: true },
       { href: "/contact", label: "Contact" },
     ],
   },
@@ -104,6 +104,8 @@ export default function Footer() {
                     <Link
                       key={link.href}
                       href={link.href}
+                      target={link.external ? "_blank" : undefined}
+                      rel={link.external ? "noopener noreferrer" : undefined}
                       className="text-sm text-mute hover:text-paper transition-colors w-fit"
                     >
                       {link.label}

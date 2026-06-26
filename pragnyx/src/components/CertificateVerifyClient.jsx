@@ -125,7 +125,7 @@ export default function CertificateVerifyClient({ certificate }) {
                     </li>
                     <li className="flex items-center gap-2">
                       <FileCheck2 size={14} strokeWidth={1.75} className="text-mute" />
-                      {c.sessionsCount} sessions · 1 project file
+                      {c.sessionsCount} sessions
                     </li>
                   </ul>
                 </div>

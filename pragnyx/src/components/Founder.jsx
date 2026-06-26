@@ -2,7 +2,7 @@ import { Quote } from "lucide-react";
 import { FOUNDER } from "@/data/site";
 import Reveal from "./Reveal";
 
-export default function Founder() {
+export default function Founder({ founder = FOUNDER }) {
   return (
     <section className="relative bg-void py-28 lg:py-36 border-t border-line overflow-hidden">
       <div className="absolute inset-0 bp-grid-fine opacity-30 pointer-events-none" />
@@ -26,16 +26,16 @@ export default function Founder() {
               <div className="gradient-border cut">
                 <div className="cut bg-surface px-7 py-8">
                   <div className="cut-sm w-20 h-20 flex items-center justify-center bg-surface-2 border border-line text-2xl font-display font-medium text-gradient">
-                    {FOUNDER.name
+                    {founder.name
                       .split(" ")
                       .map((n) => n[0])
                       .join("")}
                   </div>
                   <h3 className="mt-5 font-display text-xl font-medium tracking-tight">
-                    {FOUNDER.name}
+                    {founder.name}
                   </h3>
                   <p className="mt-1 font-mono text-[11px] tracking-[0.14em] uppercase text-mute">
-                    {FOUNDER.title}
+                    {founder.title}
                   </p>
                 </div>
               </div>
@@ -45,7 +45,7 @@ export default function Founder() {
           <div className="lg:col-span-8">
             <Reveal delay={120}>
               <p className="text-base sm:text-lg text-mute leading-relaxed max-w-2xl">
-                {FOUNDER.bio}
+                {founder.bio}
               </p>
             </Reveal>
 
@@ -58,7 +58,7 @@ export default function Founder() {
                     className="text-blue shrink-0 -mt-1"
                   />
                   <p className="font-display text-xl sm:text-2xl leading-snug tracking-tight">
-                    {FOUNDER.quote}
+                    {founder.quote}
                   </p>
                 </div>
               </div>

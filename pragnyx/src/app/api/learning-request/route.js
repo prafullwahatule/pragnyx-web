@@ -1,4 +1,6 @@
-import { MENTORS, LEARNING_TRACKS } from "@/data/site";
+import { mentorsRepo } from "@/lib/repo/mentors";
+import { getPublicLearningTracks } from "@/lib/repo/learningTracks";
+import { createLearningRequest } from "@/lib/repo/submissions";
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -18,6 +20,11 @@ export async function POST(request) {
   const mentorId = (body?.mentorId || "").trim();
   const goal = (body?.goal || "").trim();
 
+  const [mentors, learningTracks] = await Promise.all([
+    mentorsRepo.getPublic(),
+    getPublicLearningTracks(),
+  ]);
+
   const errors = {};
   if (!name) errors.name = "Name is required.";
   if (!email) {
@@ -26,14 +33,14 @@ export async function POST(request) {
     errors.email = "Enter a valid email address.";
   }
   if (!track) errors.track = "Pick what you'd like to learn.";
-  if (track && !LEARNING_TRACKS.includes(track)) {
+  if (track && !learningTracks.includes(track)) {
     errors.track = "Pick a track from the list.";
   }
   if (!goal || goal.length < 10) {
     errors.goal = "Add a sentence or two on your goal (10+ characters).";
   }
 
-  const mentor = mentorId ? MENTORS.find((m) => m.id === mentorId) : null;
+  const mentor = mentorId ? mentors.find((m) => m.id === mentorId) : null;
   if (mentorId && !mentor) {
     errors.mentorId = "Unknown mentor selected.";
   }
@@ -42,14 +49,7 @@ export async function POST(request) {
     return Response.json({ errors }, { status: 400 });
   }
 
-  console.log("[learning-request] new request", {
-    name,
-    email,
-    track,
-    goal,
-    mentor: mentor?.name || "No preference",
-    receivedAt: new Date().toISOString(),
-  });
+  await createLearningRequest({ name, email, track, goal, mentorId: mentor?.id || null });
 
   return Response.json({
     ok: true,

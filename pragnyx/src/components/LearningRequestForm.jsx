@@ -5,13 +5,18 @@ import { ArrowUpRight, Check, Loader2, X } from "lucide-react";
 import { LEARNING_TRACKS, MENTORS } from "@/data/site";
 import Reveal from "./Reveal";
 
-export default function LearningRequestForm({ selectedMentorId, onClearMentor }) {
+export default function LearningRequestForm({
+  mentors = MENTORS,
+  learningTracks = LEARNING_TRACKS,
+  selectedMentorId,
+  onClearMentor,
+}) {
   const [form, setForm] = useState({ name: "", email: "", track: "", goal: "" });
   const [status, setStatus] = useState("idle"); // idle | loading | sent | error
   const [errors, setErrors] = useState({});
   const [resultMessage, setResultMessage] = useState("");
 
-  const selectedMentor = MENTORS.find((m) => m.id === selectedMentorId);
+  const selectedMentor = mentors.find((m) => m.id === selectedMentorId);
 
   useEffect(() => {
     if (selectedMentorId) {
@@ -177,7 +182,7 @@ export default function LearningRequestForm({ selectedMentorId, onClearMentor })
                       <option value="" disabled>
                         Select a track
                       </option>
-                      {LEARNING_TRACKS.map((track) => (
+                      {learningTracks.map((track) => (
                         <option key={track} value={track}>
                           {track}
                         </option>

@@ -5,17 +5,17 @@ import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { TESTIMONIALS } from "@/data/site";
 import Reveal from "./Reveal";
 
-export default function Testimonials() {
+export default function Testimonials({ testimonials = TESTIMONIALS }) {
   const [index, setIndex] = useState(0);
 
   function next() {
-    setIndex((i) => (i + 1) % TESTIMONIALS.length);
+    setIndex((i) => (i + 1) % testimonials.length);
   }
   function prev() {
-    setIndex((i) => (i - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
+    setIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
   }
 
-  const current = TESTIMONIALS[index];
+  const current = testimonials[index];
 
   return (
     <section className="relative bg-void py-28 lg:py-36 border-t border-line">
@@ -55,7 +55,7 @@ export default function Testimonials() {
 
                 <div className="flex items-center gap-3">
                   <div className="flex gap-1.5">
-                    {TESTIMONIALS.map((t, i) => (
+                    {testimonials.map((t, i) => (
                       <button
                         key={t.name}
                         onClick={() => setIndex(i)}

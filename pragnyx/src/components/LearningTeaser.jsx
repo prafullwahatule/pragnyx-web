@@ -3,8 +3,8 @@ import { ArrowUpRight, Users } from "lucide-react";
 import { MENTORS } from "@/data/site";
 import Reveal from "./Reveal";
 
-export default function LearningTeaser() {
-  const featured = MENTORS.slice(0, 3);
+export default function LearningTeaser({ mentors = MENTORS }) {
+  const featured = mentors.slice(0, 3);
 
   return (
     <section className="relative bg-surface py-28 lg:py-36 border-t border-line overflow-hidden">

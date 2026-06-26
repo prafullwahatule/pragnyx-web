@@ -10,21 +10,34 @@ import Manifesto from "@/components/Manifesto";
 import FAQ from "@/components/FAQ";
 import ContactTeaser from "@/components/ContactTeaser";
 import Footer from "@/components/Footer";
+import { getPublicProducts } from "@/lib/repo/products";
+import { mentorsRepo } from "@/lib/repo/mentors";
+import { testimonialsRepo } from "@/lib/repo/testimonials";
+import { faqsRepo } from "@/lib/repo/faqs";
+import { statsRepo } from "@/lib/repo/stats";
 
-export default function Home() {
+export default async function Home() {
+  const [products, mentors, testimonials, faqs, stats] = await Promise.all([
+    getPublicProducts(),
+    mentorsRepo.getPublic(),
+    testimonialsRepo.getPublic(),
+    faqsRepo.getPublic(),
+    statsRepo.getPublic(),
+  ]);
+
   return (
     <>
       <Navbar />
       <main className="flex-1">
         <Hero />
-        <Stats />
+        <Stats stats={stats} />
         <Overview />
-        <ProductsTeaser />
+        <ProductsTeaser products={products} />
         <Philosophy />
-        <LearningTeaser />
-        <Testimonials />
+        <LearningTeaser mentors={mentors} />
+        <Testimonials testimonials={testimonials} />
         <Manifesto />
-        <FAQ />
+        <FAQ faqs={faqs} />
         <ContactTeaser />
       </main>
       <Footer />

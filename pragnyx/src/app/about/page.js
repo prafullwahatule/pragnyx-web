@@ -9,6 +9,9 @@ import ContactTeaser from "@/components/ContactTeaser";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { statsRepo } from "@/lib/repo/stats";
+import { getFounder } from "@/lib/repo/founder";
+import { teamRepo } from "@/lib/repo/team";
 
 export const metadata = {
   title: "About — PragnyX",
@@ -16,7 +19,13 @@ export const metadata = {
     "PragnyX is a future-focused brand building reasoning-first products, custom engineering, and one-to-one mentorship — engineered, not predicted.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const [stats, founder, team] = await Promise.all([
+    statsRepo.getPublic(),
+    getFounder(),
+    teamRepo.getPublic(),
+  ]);
+
   return (
     <>
       <Navbar />
@@ -34,10 +43,10 @@ export default function AboutPage() {
             <ArrowUpRight size={15} strokeWidth={1.75} />
           </Link>
         </PageHero>
-        <Stats />
+        <Stats stats={stats} />
         <ValuesGrid />
-        <Founder />
-        <Team />
+        <Founder founder={founder} />
+        <Team team={team} />
         <Timeline />
         <ContactTeaser />
       </main>

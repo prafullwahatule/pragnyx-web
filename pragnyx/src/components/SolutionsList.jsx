@@ -3,12 +3,12 @@ import Link from "next/link";
 import { PRODUCTS } from "@/data/site";
 import Reveal from "./Reveal";
 
-export default function SolutionsList() {
+export default function SolutionsList({ products = PRODUCTS }) {
   return (
     <section className="relative bg-void py-8">
       <div className="absolute inset-0 bp-grid-fine opacity-30 pointer-events-none" />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10 flex flex-col gap-20 lg:gap-28">
-        {PRODUCTS.map((product, i) => (
+        {products.map((product, i) => (
           <Reveal key={product.slug} delay={i * 60}>
             <div
               id={product.slug}

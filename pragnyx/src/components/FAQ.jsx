@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { FAQS } from "@/data/site";
 import Reveal from "./Reveal";
 
-export default function FAQ() {
+export default function FAQ({ faqs = FAQS }) {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
@@ -24,7 +24,7 @@ export default function FAQ() {
         </Reveal>
 
         <div className="mt-12 flex flex-col gap-3">
-          {FAQS.map((item, i) => {
+          {faqs.map((item, i) => {
             const isOpen = openIndex === i;
             return (
               <Reveal key={item.q} delay={i * 60}>

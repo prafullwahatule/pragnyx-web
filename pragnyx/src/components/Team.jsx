@@ -1,7 +1,7 @@
 import { TEAM } from "@/data/site";
 import Reveal from "./Reveal";
 
-export default function Team() {
+export default function Team({ team = TEAM }) {
   return (
     <section className="relative bg-surface py-28 lg:py-36 border-t border-line">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -18,7 +18,7 @@ export default function Team() {
         </Reveal>
 
         <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {TEAM.map((member, i) => (
+          {team.map((member, i) => (
             <Reveal key={member.id} delay={i * 90}>
               <div className="h-full gradient-border cut">
                 <div className="cut h-full bg-void px-6 py-7 flex flex-col">

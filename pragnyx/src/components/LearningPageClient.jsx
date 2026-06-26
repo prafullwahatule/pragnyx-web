@@ -6,9 +6,13 @@ import HowItWorks from "./HowItWorks";
 import MentorGrid from "./MentorGrid";
 import PricingPlans from "./PricingPlans";
 import LearningRequestForm from "./LearningRequestForm";
-import { MENTORS } from "@/data/site";
+import { MENTORS, LEARNING_PLANS, LEARNING_TRACKS } from "@/data/site";
 
-export default function LearningPageClient() {
+export default function LearningPageClient({
+  mentors = MENTORS,
+  plans = LEARNING_PLANS,
+  learningTracks = LEARNING_TRACKS,
+}) {
   const [selectedMentorId, setSelectedMentorId] = useState(null);
 
   function handleRequestMentor(mentorId) {
@@ -23,11 +27,13 @@ export default function LearningPageClient() {
 
   return (
     <>
-      <LearningHero mentorCount={MENTORS.length} />
+      <LearningHero mentorCount={mentors.length} />
       <HowItWorks />
-      <MentorGrid onRequestMentor={handleRequestMentor} />
-      <PricingPlans onChoosePlan={handleChoosePlan} />
+      <MentorGrid mentors={mentors} onRequestMentor={handleRequestMentor} />
+      <PricingPlans plans={plans} onChoosePlan={handleChoosePlan} />
       <LearningRequestForm
+        mentors={mentors}
+        learningTracks={learningTracks}
         selectedMentorId={selectedMentorId}
         onClearMentor={() => setSelectedMentorId(null)}
       />

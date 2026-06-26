@@ -6,6 +6,8 @@ import ContactTeaser from "@/components/ContactTeaser";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { getPublicProducts } from "@/lib/repo/products";
+import { faqsRepo } from "@/lib/repo/faqs";
 
 export const metadata = {
   title: "Solutions — PragnyX",
@@ -13,7 +15,9 @@ export const metadata = {
     "Business Intelligence, Software Solutions, Data Intelligence, and AI & Automation — four services built on the same idea: deliberate, explainable thinking applied to hard problems.",
 };
 
-export default function SolutionsPage() {
+export default async function SolutionsPage() {
+  const [products, faqs] = await Promise.all([getPublicProducts(), faqsRepo.getPublic()]);
+
   return (
     <>
       <Navbar />
@@ -31,8 +35,8 @@ export default function SolutionsPage() {
             <ArrowUpRight size={15} strokeWidth={1.75} />
           </Link>
         </PageHero>
-        <SolutionsList />
-        <FAQ />
+        <SolutionsList products={products} />
+        <FAQ faqs={faqs} />
         <ContactTeaser />
       </main>
       <Footer />

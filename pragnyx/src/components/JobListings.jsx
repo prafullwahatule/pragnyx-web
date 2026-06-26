@@ -20,13 +20,15 @@ function ApplyForm({ job, onClose }) {
     setError("");
 
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("/api/job-application", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          jobId: job.id,
+          jobTitle: job.title,
           name: form.name,
           email: form.email,
-          message: `[Application: ${job.title}] ${form.note || "No additional note."}`,
+          note: form.note,
         }),
       });
       const data = await res.json();
@@ -111,7 +113,7 @@ function ApplyForm({ job, onClose }) {
   );
 }
 
-export default function JobListings() {
+export default function JobListings({ jobs = JOBS }) {
   const [openJobId, setOpenJobId] = useState(null);
 
   return (
@@ -125,12 +127,12 @@ export default function JobListings() {
             </span>
           </div>
           <h2 className="font-display font-medium text-3xl sm:text-4xl leading-[1.15] tracking-tight">
-            {JOBS.length} positions open right now.
+            {jobs.length} positions open right now.
           </h2>
         </Reveal>
 
         <div className="mt-12 flex flex-col gap-4">
-          {JOBS.map((job, i) => {
+          {jobs.map((job, i) => {
             const isOpen = openJobId === job.id;
             return (
               <Reveal key={job.id} delay={i * 70}>

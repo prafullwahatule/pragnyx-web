@@ -2,7 +2,7 @@ import { Check, ArrowUpRight } from "lucide-react";
 import { LEARNING_PLANS } from "@/data/site";
 import Reveal from "./Reveal";
 
-export default function PricingPlans({ onChoosePlan }) {
+export default function PricingPlans({ plans = LEARNING_PLANS, onChoosePlan }) {
   return (
     <section id="pricing" className="relative bg-void py-28 lg:py-36 border-t border-line">
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -19,7 +19,7 @@ export default function PricingPlans({ onChoosePlan }) {
         </Reveal>
 
         <div className="mt-14 grid lg:grid-cols-3 gap-6">
-          {LEARNING_PLANS.map((plan, i) => (
+          {plans.map((plan, i) => (
             <Reveal key={plan.name} delay={i * 100}>
               <div
                 className={`relative h-full cut ${

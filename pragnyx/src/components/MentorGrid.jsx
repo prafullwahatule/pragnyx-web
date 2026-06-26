@@ -1,19 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Star, MessageSquareText } from "lucide-react";
 import { MENTORS } from "@/data/site";
 import Reveal from "./Reveal";
 
-const ALL_TRACKS = ["All", ...Array.from(new Set(MENTORS.flatMap((m) => m.tracks)))];
-
-export default function MentorGrid({ onRequestMentor }) {
+export default function MentorGrid({ mentors = MENTORS, onRequestMentor }) {
   const [activeTrack, setActiveTrack] = useState("All");
+
+  const allTracks = useMemo(
+    () => ["All", ...Array.from(new Set(mentors.flatMap((m) => m.tracks)))],
+    [mentors]
+  );
 
   const visible =
     activeTrack === "All"
-      ? MENTORS
-      : MENTORS.filter((m) => m.tracks.includes(activeTrack));
+      ? mentors
+      : mentors.filter((m) => m.tracks.includes(activeTrack));
 
   return (
     <section id="mentors" className="relative bg-void py-28 lg:py-36 border-t border-line">
@@ -32,7 +35,7 @@ export default function MentorGrid({ onRequestMentor }) {
 
         <Reveal delay={100}>
           <div className="mt-9 flex flex-wrap gap-2.5">
-            {ALL_TRACKS.map((track) => (
+            {allTracks.map((track) => (
               <button
                 key={track}
                 onClick={() => setActiveTrack(track)}

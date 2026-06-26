@@ -1,6 +1,4 @@
-// In-memory store for the demo/dev environment. In production this would
-// write to a real database or ESP (e.g. Resend, Mailchimp, Customer.io).
-const subscribers = new Set();
+import { addNewsletterSubscriber } from "@/lib/repo/submissions";
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -22,19 +20,22 @@ export async function POST(request) {
   if (!isValidEmail(email)) {
     return Response.json({ error: "Enter a valid email address." }, { status: 400 });
   }
-  if (subscribers.has(email)) {
-    return Response.json({ ok: true, message: "You're already on the list." });
-  }
 
-  subscribers.add(email);
+  const result = await addNewsletterSubscriber(email);
+
+  if (result.alreadySubscribed) {
+    return Response.json({ ok: true, message: "You're already on the list.", count: result.count });
+  }
 
   return Response.json({
     ok: true,
     message: "Subscribed. Welcome to the frontier.",
-    count: subscribers.size,
+    count: result.count,
   });
 }
 
 export async function GET() {
-  return Response.json({ count: subscribers.size });
+  const { getNewsletterSubscribers } = await import("@/lib/repo/submissions");
+  const subs = await getNewsletterSubscribers();
+  return Response.json({ count: subs.length });
 }

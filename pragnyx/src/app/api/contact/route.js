@@ -1,3 +1,5 @@
+import { createContactSubmission } from "@/lib/repo/submissions";
+
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -29,14 +31,10 @@ export async function POST(request) {
     return Response.json({ errors }, { status: 400 });
   }
 
-  // In production this would send via Resend/Postmark/etc, or create a
-  // ticket in a CRM. Logged server-side here so the flow is fully wired.
-  console.log("[contact] new message", {
-    name,
-    email,
-    message,
-    receivedAt: new Date().toISOString(),
-  });
+  // Persists to the database (visible in the admin panel inbox) when
+  // DATABASE_URL is configured; otherwise falls back to a server log so
+  // the flow still works end-to-end on a fresh, un-configured clone.
+  await createContactSubmission({ name, email, message, source: "contact" });
 
   return Response.json({
     ok: true,

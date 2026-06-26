@@ -3,12 +3,12 @@ import { ArrowUpRight, ShieldAlert } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CertificateVerifyClient from "@/components/CertificateVerifyClient";
-import { getCertificateById } from "@/data/certificates";
+import { getCertificateById } from "@/lib/repo/certificates";
 import { certificateVerifyUrl, formatLongDate } from "@/lib/certificate";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const certificate = getCertificateById(id);
+  const certificate = await getCertificateById(id);
 
   if (!certificate) {
     return {
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }) {
 
 export default async function CertificatePage({ params }) {
   const { id } = await params;
-  const certificate = getCertificateById(id);
+  const certificate = await getCertificateById(id);
 
   if (!certificate) {
     return (

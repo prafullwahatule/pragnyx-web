@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { PRODUCTS } from "@/data/site";
 import Reveal from "./Reveal";
 
-export default function ProductsTeaser() {
+export default function ProductsTeaser({ products = PRODUCTS }) {
   return (
     <section id="products" className="relative bg-void py-28 lg:py-36 border-t border-line">
       <div className="absolute inset-0 bp-grid-fine opacity-40 pointer-events-none" />
@@ -33,7 +33,7 @@ export default function ProductsTeaser() {
         </Reveal>
 
         <div className="mt-14 grid sm:grid-cols-2 gap-5">
-          {PRODUCTS.map((product, i) => (
+          {products.map((product, i) => (
             <Reveal key={product.slug} delay={i * 100}>
               <Link
                 href={`/solutions#${product.slug}`}

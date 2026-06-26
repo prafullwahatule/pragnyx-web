@@ -4,6 +4,7 @@ import Perks from "@/components/Perks";
 import JobListings from "@/components/JobListings";
 import ContactTeaser from "@/components/ContactTeaser";
 import Footer from "@/components/Footer";
+import { jobsRepo } from "@/lib/repo/jobs";
 
 export const metadata = {
   title: "Careers — PragnyX",
@@ -11,7 +12,9 @@ export const metadata = {
     "Open roles at PragnyX across engineering, design, and PragnyX Learning mentorship. Remote-first, async by default.",
 };
 
-export default function CareersPage() {
+export default async function CareersPage() {
+  const jobs = await jobsRepo.getPublic();
+
   return (
     <>
       <Navbar />
@@ -22,7 +25,7 @@ export default function CareersPage() {
           description="We're a small, distributed team building products, custom solutions, and a mentorship network — and we're hiring across all three."
         />
         <Perks />
-        <JobListings />
+        <JobListings jobs={jobs} />
         <ContactTeaser />
       </main>
       <Footer />

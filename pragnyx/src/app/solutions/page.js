@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { getPublicProducts } from "@/lib/repo/products";
 import { faqsRepo } from "@/lib/repo/faqs";
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Solutions — PragnyX",

@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Contact — PragnyX",

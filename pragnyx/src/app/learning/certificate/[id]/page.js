@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import CertificateVerifyClient from "@/components/CertificateVerifyClient";
 import { getCertificateById } from "@/lib/repo/certificates";
 import { certificateVerifyUrl, formatLongDate } from "@/lib/certificate";
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;

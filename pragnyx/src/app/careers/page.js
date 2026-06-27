@@ -5,6 +5,7 @@ import JobListings from "@/components/JobListings";
 import ContactTeaser from "@/components/ContactTeaser";
 import Footer from "@/components/Footer";
 import { jobsRepo } from "@/lib/repo/jobs";
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Careers — PragnyX",

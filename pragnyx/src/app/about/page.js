@@ -12,6 +12,7 @@ import { ArrowUpRight } from "lucide-react";
 import { statsRepo } from "@/lib/repo/stats";
 import { getFounder } from "@/lib/repo/founder";
 import { teamRepo } from "@/lib/repo/team";
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "About — PragnyX",

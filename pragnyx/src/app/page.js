@@ -15,6 +15,7 @@ import { mentorsRepo } from "@/lib/repo/mentors";
 import { testimonialsRepo } from "@/lib/repo/testimonials";
 import { faqsRepo } from "@/lib/repo/faqs";
 import { statsRepo } from "@/lib/repo/stats";
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const [products, mentors, testimonials, faqs, stats] = await Promise.all([

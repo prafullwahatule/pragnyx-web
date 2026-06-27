@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { mentorsRepo } from "@/lib/repo/mentors";
 import { learningPlansRepo } from "@/lib/repo/learningPlans";
 import { getPublicLearningTracks } from "@/lib/repo/learningTracks";
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "PragnyX Learning — One-to-one mentorship",

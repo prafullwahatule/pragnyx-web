@@ -3,6 +3,7 @@ import PageHero from "@/components/PageHero";
 import LegalContent from "@/components/LegalContent";
 import ContactTeaser from "@/components/ContactTeaser";
 import Footer from "@/components/Footer";
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Terms & Conditions — PragnyX",

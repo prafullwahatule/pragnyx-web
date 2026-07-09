@@ -12,6 +12,7 @@ import {
   AlertTriangle,
   Building2,
   CalendarClock,
+  Wallet,
 } from "lucide-react";
 import { isDbConfigured } from "@/lib/db";
 import { getAllProducts } from "@/lib/repo/products";
@@ -25,13 +26,14 @@ import {
   getJobApplications,
 } from "@/lib/repo/submissions";
 import { listWorkspaces, getEduOSDemoRequests } from "@/lib/repo/eduos";
+import { listWorkspaces as listFinCoreWorkspaces, getFinCoreDemoRequests } from "@/lib/repo/fincore";
 
 export default async function AdminDashboardPage() {
   const dbConfigured = isDbConfigured();
 
   const [
     products, mentors, jobs, certificates, contacts, subscribers, learningRequests, jobApplications,
-    eduosWorkspaces, eduosDemoRequests,
+    eduosWorkspaces, eduosDemoRequests, fincoreWorkspaces, fincoreDemoRequests,
   ] =
     await Promise.all([
       getAllProducts(),
@@ -44,6 +46,8 @@ export default async function AdminDashboardPage() {
       getJobApplications(),
       listWorkspaces(),
       getEduOSDemoRequests(),
+      listFinCoreWorkspaces(),
+      getFinCoreDemoRequests(),
     ]);
 
   const newContacts = contacts.filter((c) => c.status === "new").length;
@@ -51,6 +55,8 @@ export default async function AdminDashboardPage() {
   const newJobApplications = jobApplications.filter((j) => j.status === "new").length;
   const newEduOSDemoRequests = eduosDemoRequests.filter((r) => r.status === "new").length;
   const activeWorkspaces = eduosWorkspaces.filter((w) => w.subscriptionStatus === "active").length;
+  const newFinCoreDemoRequests = fincoreDemoRequests.filter((r) => r.status === "new").length;
+  const activeFinCoreWorkspaces = fincoreWorkspaces.filter((w) => w.subscriptionStatus === "active").length;
 
   const contentCards = [
     { href: "/admin/products", label: "Solutions", count: products.length, icon: Boxes },
@@ -119,6 +125,17 @@ export default async function AdminDashboardPage() {
           <DashboardCard href="/admin/eduos/workspaces" label="Active workspaces" count={activeWorkspaces} icon={Building2} />
           <DashboardCard href="/admin/eduos/workspaces" label="Total workspaces" count={eduosWorkspaces.length} icon={Building2} />
           <DashboardCard href="/admin/eduos/demo-requests" label="Demo requests" count={eduosDemoRequests.length} badge={newEduOSDemoRequests} icon={CalendarClock} />
+        </div>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="font-mono text-[11px] tracking-[0.18em] uppercase text-mute mb-4">
+          FinCore
+        </h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <DashboardCard href="/admin/fincore/workspaces" label="Active workspaces" count={activeFinCoreWorkspaces} icon={Wallet} />
+          <DashboardCard href="/admin/fincore/workspaces" label="Total workspaces" count={fincoreWorkspaces.length} icon={Wallet} />
+          <DashboardCard href="/admin/fincore/demo-requests" label="Demo requests" count={fincoreDemoRequests.length} badge={newFinCoreDemoRequests} icon={CalendarClock} />
         </div>
       </section>
 

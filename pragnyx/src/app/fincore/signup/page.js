@@ -1,7 +1,7 @@
 import FinCoreNavbar from "@/components/fincore/FinCoreNavbar";
 import FinCoreFooter from "@/components/fincore/FinCoreFooter";
 import SignupWizard from "@/components/fincore/SignupWizard";
-import { getPlan } from "@/lib/fincore/plans";
+import { getEffectivePlans } from "@/lib/fincore/effectivePlans";
 
 export const metadata = {
   title: "Get Started — PragnyX FinCore",
@@ -10,7 +10,8 @@ export const metadata = {
 
 export default async function FinCoreSignupPage({ searchParams }) {
   const params = await searchParams;
-  const requestedPlan = getPlan(params?.plan);
+  const plans = await getEffectivePlans();
+  const requestedPlan = plans.find((p) => p.id === params?.plan);
 
   return (
     <>
@@ -18,7 +19,7 @@ export default async function FinCoreSignupPage({ searchParams }) {
       <main>
         <section className="e-dot-grid" style={{ padding: "64px 0 80px" }}>
           <div className="e-shell">
-            <SignupWizard initialPlan={requestedPlan?.id} />
+            <SignupWizard plans={plans} initialPlan={requestedPlan?.id} />
           </div>
         </section>
       </main>

@@ -9,15 +9,22 @@ const STATUS_STYLES = {
   cancelled: "text-rose-400 border-rose-400/30 bg-rose-400/10",
 };
 
-export default function WorkspacesTable({ initialItems }) {
+export default function WorkspacesTable({
+  initialItems,
+  title = "EduOS workspaces",
+  description = "Institutions provisioned through the EduOS self-serve checkout flow.",
+  apiBasePath = "/api/admin/eduos/workspaces",
+  idKey = "institutionId",
+  profileKey = "institution",
+}) {
   const [items, setItems] = useState(initialItems);
 
   async function toggleStatus(item) {
     const nextStatus = item.subscriptionStatus === "active" ? "suspended" : "active";
     setItems((prev) =>
-      prev.map((w) => (w.institutionId === item.institutionId ? { ...w, subscriptionStatus: nextStatus } : w))
+      prev.map((w) => (w[idKey] === item[idKey] ? { ...w, subscriptionStatus: nextStatus } : w))
     );
-    await fetch(`/api/admin/eduos/workspaces/${encodeURIComponent(item.institutionId)}`, {
+    await fetch(`${apiBasePath}/${encodeURIComponent(item[idKey])}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: nextStatus }),
@@ -25,18 +32,18 @@ export default function WorkspacesTable({ initialItems }) {
   }
 
   async function handleDelete(item) {
-    if (!confirm(`Delete workspace "${item.institutionId}"? This can't be undone.`)) return;
-    await fetch(`/api/admin/eduos/workspaces/${encodeURIComponent(item.institutionId)}`, { method: "DELETE" });
-    setItems((prev) => prev.filter((w) => w.institutionId !== item.institutionId));
+    if (!confirm(`Delete workspace "${item[idKey]}"? This can't be undone.`)) return;
+    await fetch(`${apiBasePath}/${encodeURIComponent(item[idKey])}`, { method: "DELETE" });
+    setItems((prev) => prev.filter((w) => w[idKey] !== item[idKey]));
   }
 
   return (
     <div>
       <div className="flex flex-wrap items-start justify-between gap-4 mb-7">
         <div>
-          <h1 className="font-display text-2xl font-medium tracking-tight">EduOS workspaces</h1>
+          <h1 className="font-display text-2xl font-medium tracking-tight">{title}</h1>
           <p className="mt-1.5 text-sm text-mute max-w-lg">
-            Institutions provisioned through the EduOS self-serve checkout flow.
+            {description}
           </p>
         </div>
         <span className="text-xs text-mute">{items.length} total</span>
@@ -49,11 +56,11 @@ export default function WorkspacesTable({ initialItems }) {
       ) : (
         <div className="flex flex-col gap-2.5">
           {items.map((item) => (
-            <div key={item.institutionId} className="cut-sm border border-line bg-surface px-5 py-4">
+            <div key={item[idKey]} className="cut-sm border border-line bg-surface px-5 py-4">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex-1 min-w-0 grid gap-1.5">
                   <div className="flex items-center gap-2.5 flex-wrap">
-                    <span className="text-sm text-paper font-medium">{item.institution?.name}</span>
+                    <span className="text-sm text-paper font-medium">{item[profileKey]?.name}</span>
                     <span
                       className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-mono uppercase tracking-wide ${
                         STATUS_STYLES[item.subscriptionStatus] || "text-mute border-line"
@@ -67,11 +74,11 @@ export default function WorkspacesTable({ initialItems }) {
                   </div>
                   <div className="text-xs text-blue flex items-center gap-1.5">
                     <a href={item.workspaceUrl} target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1">
-                      {item.institutionId} <ExternalLink size={11} />
+                      {item[idKey]} <ExternalLink size={11} />
                     </a>
                   </div>
                   <div className="text-xs text-mute">
-                    {item.institution?.contactPerson} · {item.institution?.email} · {item.institution?.phone}
+                    {item[profileKey]?.contactPerson ? `${item[profileKey].contactPerson} · ` : ""}{item[profileKey]?.email} · {item[profileKey]?.phone}
                   </div>
                   <div className="text-xs text-mute">
                     Tenant: {item.tenantId} · License: {item.licenseId} · Renews{" "}

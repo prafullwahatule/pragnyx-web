@@ -4,13 +4,18 @@ import PricingTiers from "@/components/fincore/PricingTiers";
 import ModularAddons from "@/components/fincore/ModularAddons";
 import FinCoreFAQ from "@/components/fincore/FinCoreFAQ";
 import Reveal from "@/components/Reveal";
+import { getEffectivePlans } from "@/lib/fincore/effectivePlans";
 
 export const metadata = {
   title: "Pricing — PragnyX FinCore",
   description: "Starter, Professional, and Enterprise editions of PragnyX FinCore. Modular licensing — unlock modules like Inventory Pro, Payroll, and the AI Suite as add-ons.",
 };
 
-export default function FinCorePricingPage() {
+export const dynamic = "force-dynamic";
+
+export default async function FinCorePricingPage() {
+  const plans = await getEffectivePlans();
+
   return (
     <>
       <FinCoreNavbar />
@@ -31,7 +36,7 @@ export default function FinCorePricingPage() {
 
         <section className="e-section" style={{ paddingTop: 40 }}>
           <div className="e-shell">
-            <PricingTiers />
+            <PricingTiers plans={plans} />
             <ModularAddons />
           </div>
         </section>

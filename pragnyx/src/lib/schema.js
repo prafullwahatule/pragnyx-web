@@ -274,4 +274,15 @@ CREATE TABLE IF NOT EXISTS fincore_demo_requests (
   status            TEXT NOT NULL DEFAULT 'new',
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Admin-editable price overrides for self-serve FinCore plans (Starter,
+-- Professional). Enterprise stays "Contact Sales" and is never priced here.
+-- Falls back to the defaults in src/lib/fincore/plans.js when no row
+-- exists for a plan yet.
+CREATE TABLE IF NOT EXISTS fincore_plan_prices (
+  plan_id     TEXT PRIMARY KEY,
+  price       INTEGER NOT NULL,
+  currency    TEXT NOT NULL DEFAULT 'INR',
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 `;

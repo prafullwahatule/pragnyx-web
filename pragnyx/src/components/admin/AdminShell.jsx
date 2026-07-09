@@ -64,6 +64,7 @@ const NAV_SECTIONS = [
     heading: "FinCore",
     items: [
       { href: "/admin/fincore/workspaces", label: "Workspaces", icon: Wallet },
+      { href: "/admin/fincore/pricing", label: "Pricing", icon: Tag },
       { href: "/admin/fincore/demo-requests", label: "Demo requests", icon: CalendarClock },
     ],
   },

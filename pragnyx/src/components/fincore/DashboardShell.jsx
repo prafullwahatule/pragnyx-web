@@ -6,7 +6,7 @@ import {
   LayoutDashboard, CreditCard, Blocks, Users, LifeBuoy, Loader2,
   Download, ArrowUpCircle, Check, Send, ExternalLink,
 } from "lucide-react";
-import { ADD_ONS, PLANS } from "@/lib/fincore/plans";
+import { ADD_ONS, PLANS as STATIC_PLANS } from "@/lib/fincore/plans";
 
 const TABS = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -20,6 +20,14 @@ export default function DashboardShell({ workspaceId }) {
   const [tab, setTab] = useState("overview");
   const [workspace, setWorkspace] = useState(null);
   const [status, setStatus] = useState("loading");
+  const [plans, setPlans] = useState(STATIC_PLANS);
+
+  useEffect(() => {
+    fetch("/api/fincore/plans")
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data) => setPlans(data.plans))
+      .catch(() => {}); // falls back to STATIC_PLANS, fine for display purposes
+  }, []);
 
   useEffect(() => {
     if (!workspaceId) {
@@ -88,7 +96,7 @@ export default function DashboardShell({ workspaceId }) {
 
       <div>
         {tab === "overview" && <Overview workspace={workspace} />}
-        {tab === "billing" && <Billing workspace={workspace} />}
+        {tab === "billing" && <Billing workspace={workspace} plans={plans} />}
         {tab === "modules" && <Modules workspace={workspace} />}
         {tab === "team" && <Team workspace={workspace} />}
         {tab === "support" && <Support workspace={workspace} />}
@@ -151,7 +159,7 @@ function Overview({ workspace }) {
   );
 }
 
-function Billing({ workspace }) {
+function Billing({ workspace, plans }) {
   const [confirmPlan, setConfirmPlan] = useState(null);
 
   return (
@@ -165,7 +173,7 @@ function Billing({ workspace }) {
           <Field label="Amount" value={workspace.billing.amount ? `₹${workspace.billing.amount.toLocaleString("en-IN")} / ${workspace.billing.period}` : "Custom"} />
         </div>
         <div style={{ marginTop: 20, display: "flex", gap: 10, flexWrap: "wrap" }}>
-          {PLANS.filter((p) => p.selfServe && p.id !== workspace.plan).map((p) => (
+          {plans.filter((p) => p.selfServe && p.id !== workspace.plan).map((p) => (
             <button key={p.id} onClick={() => setConfirmPlan(p.id)} className="e-btn e-btn-ghost e-btn-sm">
               <ArrowUpCircle size={14} strokeWidth={2} /> Switch to {p.name}
             </button>
@@ -173,7 +181,7 @@ function Billing({ workspace }) {
         </div>
         {confirmPlan && (
           <p style={{ marginTop: 12, fontSize: 12.5, color: "var(--e-ink-mute)" }}>
-            Plan change requests are confirmed by our billing team within one business day — request for <strong>{PLANS.find((p) => p.id === confirmPlan)?.name}</strong> noted. (Demo view — this isn&apos;t wired to a live billing engine yet.)
+            Plan change requests are confirmed by our billing team within one business day — request for <strong>{plans.find((p) => p.id === confirmPlan)?.name}</strong> noted. (Demo view — this isn&apos;t wired to a live billing engine yet.)
           </p>
         )}
       </Card>

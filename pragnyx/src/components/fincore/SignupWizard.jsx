@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Check, ArrowRight, ArrowLeft, Loader2, CheckCircle2, AlertTriangle, Copy } from "lucide-react";
-import { PLANS, formatPrice, getPlan } from "@/lib/fincore/plans";
+import { PLANS as STATIC_PLANS, formatPrice } from "@/lib/fincore/plans";
 
 const BUSINESS_TYPES = ["Proprietorship", "Partnership", "Private Limited", "LLP", "Public Limited"];
 const INDUSTRIES = ["Retail", "Manufacturing", "Trading", "Services", "Healthcare", "Education", "Construction", "Professional Firm"];
@@ -19,7 +19,7 @@ function loadRazorpayScript() {
   });
 }
 
-export default function SignupWizard({ initialPlan }) {
+export default function SignupWizard({ initialPlan, plans = STATIC_PLANS }) {
   const [step, setStep] = useState(initialPlan ? "details" : "plan");
   const [planId, setPlanId] = useState(initialPlan || "professional");
   const [business, setBusiness] = useState({
@@ -31,7 +31,7 @@ export default function SignupWizard({ initialPlan }) {
   const [workspace, setWorkspace] = useState(null);
   const [demoSent, setDemoSent] = useState(false);
 
-  const plan = getPlan(planId);
+  const plan = plans.find((p) => p.id === planId) || plans[0];
 
   const update = (field) => (e) => setBusiness((v) => ({ ...v, [field]: e.target.value }));
 
@@ -179,7 +179,7 @@ export default function SignupWizard({ initialPlan }) {
         <div>
           <h2 style={{ fontSize: 24, fontWeight: 600, textAlign: "center" }}>Choose your plan</h2>
           <div style={{ marginTop: 28, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }} className="e-wizard-plans">
-            {PLANS.map((p) => (
+            {plans.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setPlanId(p.id)}

@@ -1,4 +1,4 @@
-import { getPlan } from "@/lib/fincore/plans";
+import { getEffectivePlan } from "@/lib/fincore/effectivePlans";
 import { getRazorpayClient, isRazorpayConfigured } from "@/lib/fincore/razorpay";
 
 function isValidEmail(email) {
@@ -16,7 +16,7 @@ export async function POST(request) {
   const planId = (body?.planId || "").trim();
   const business = body?.business || {};
 
-  const plan = getPlan(planId);
+  const plan = await getEffectivePlan(planId);
   if (!plan) {
     return Response.json({ error: "Unknown plan selected." }, { status: 400 });
   }

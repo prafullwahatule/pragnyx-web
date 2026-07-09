@@ -4,6 +4,7 @@
 
 export const NAV_LINKS = [
   { href: "/solutions", label: "Solutions" },
+  { href: "/eduos", label: "EduOS" },
   // { href: "/learning", label: "Learning" },
   { href: "/about", label: "About" },
   { href: "/careers", label: "Careers" },
@@ -62,6 +63,20 @@ export const PRODUCTS = [
       "Explainable outputs — built to be trusted, not just fast",
     ],
     color: "violet",
+  },
+  {
+    slug: "pragnyx-eduos",
+    name: "PragnyX EduOS",
+    tag: "Education ERP + AI OS",
+    summary:
+      "The AI operating system for modern colleges and schools — one product, every department, from admissions to alumni, replacing clunky legacy ERPs with real-time dashboards and role-based portals.",
+    bullets: [
+      "Role-based dashboards for Admin, Principal, HOD, Faculty, Student, Parent, Accountant, Librarian, Hostel Warden & Placement Officer",
+      "No-code Workflow, Dashboard, Form & Report Builders, plus an EduOS AI Copilot for instant search across the system",
+      "Full academic lifecycle — admissions & CRM, academics, attendance, exams, hostel, transport, HR & payroll, placements — secured with role-based access, audit logging & encryption",
+    ],
+    color: "violet",
+    href: "/eduos",
   },
 ];
 

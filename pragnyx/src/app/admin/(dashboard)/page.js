@@ -10,6 +10,8 @@ import {
   ClipboardList,
   Database,
   AlertTriangle,
+  Building2,
+  CalendarClock,
 } from "lucide-react";
 import { isDbConfigured } from "@/lib/db";
 import { getAllProducts } from "@/lib/repo/products";
@@ -22,11 +24,15 @@ import {
   getLearningRequests,
   getJobApplications,
 } from "@/lib/repo/submissions";
+import { listWorkspaces, getEduOSDemoRequests } from "@/lib/repo/eduos";
 
 export default async function AdminDashboardPage() {
   const dbConfigured = isDbConfigured();
 
-  const [products, mentors, jobs, certificates, contacts, subscribers, learningRequests, jobApplications] =
+  const [
+    products, mentors, jobs, certificates, contacts, subscribers, learningRequests, jobApplications,
+    eduosWorkspaces, eduosDemoRequests,
+  ] =
     await Promise.all([
       getAllProducts(),
       mentorsRepo.getAll(),
@@ -36,11 +42,15 @@ export default async function AdminDashboardPage() {
       getNewsletterSubscribers(),
       getLearningRequests(),
       getJobApplications(),
+      listWorkspaces(),
+      getEduOSDemoRequests(),
     ]);
 
   const newContacts = contacts.filter((c) => c.status === "new").length;
   const newLearningRequests = learningRequests.filter((r) => r.status === "new").length;
   const newJobApplications = jobApplications.filter((j) => j.status === "new").length;
+  const newEduOSDemoRequests = eduosDemoRequests.filter((r) => r.status === "new").length;
+  const activeWorkspaces = eduosWorkspaces.filter((w) => w.subscriptionStatus === "active").length;
 
   const contentCards = [
     { href: "/admin/products", label: "Solutions", count: products.length, icon: Boxes },
@@ -98,6 +108,17 @@ export default async function AdminDashboardPage() {
           {inboxCards.map((card) => (
             <DashboardCard key={card.href} {...card} />
           ))}
+        </div>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="font-mono text-[11px] tracking-[0.18em] uppercase text-mute mb-4">
+          EduOS
+        </h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <DashboardCard href="/admin/eduos/workspaces" label="Active workspaces" count={activeWorkspaces} icon={Building2} />
+          <DashboardCard href="/admin/eduos/workspaces" label="Total workspaces" count={eduosWorkspaces.length} icon={Building2} />
+          <DashboardCard href="/admin/eduos/demo-requests" label="Demo requests" count={eduosDemoRequests.length} badge={newEduOSDemoRequests} icon={CalendarClock} />
         </div>
       </section>
 

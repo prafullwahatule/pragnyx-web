@@ -32,10 +32,10 @@ export default function SolutionsList({ products = PRODUCTS }) {
                   {product.summary}
                 </p>
                 <Link
-                  href="/contact"
+                  href={product.href || "/contact"}
                   className="mt-7 inline-flex items-center gap-2 cut border border-line bg-surface/60 px-6 py-3 font-mono text-xs tracking-[0.14em] uppercase text-paper transition-colors duration-300 hover:border-blue/50"
                 >
-                  Talk to us about {product.name}
+                  {product.href ? `Explore ${product.name}` : `Talk to us about ${product.name}`}
                   <ArrowUpRight size={14} strokeWidth={1.75} />
                 </Link>
               </div>

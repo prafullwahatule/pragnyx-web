@@ -24,6 +24,8 @@ import {
   X,
   LogOut,
   ExternalLink,
+  Building2,
+  CalendarClock,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -49,6 +51,13 @@ const NAV_SECTIONS = [
   {
     heading: "Certificates",
     items: [{ href: "/admin/certificates", label: "Certificates", icon: Award }],
+  },
+  {
+    heading: "EduOS",
+    items: [
+      { href: "/admin/eduos/workspaces", label: "Workspaces", icon: Building2 },
+      { href: "/admin/eduos/demo-requests", label: "Demo requests", icon: CalendarClock },
+    ],
   },
   {
     heading: "Inbox",

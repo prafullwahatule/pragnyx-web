@@ -195,4 +195,43 @@ CREATE TABLE IF NOT EXISTS job_applications (
   status      TEXT NOT NULL DEFAULT 'new',
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- ─────────────────────── PragnyX EduOS ───────────────────────
+-- Multi-tenant workspace records created by the self-serve checkout flow
+-- (see src/lib/eduos/provisioning.js) and demo requests from the Enterprise
+-- / "Book a Demo" path. Kept separate from the tables above since this is
+-- its own product line with its own lifecycle (subscriptions, renewals).
+
+CREATE TABLE IF NOT EXISTS eduos_workspaces (
+  institution_id       TEXT PRIMARY KEY,
+  workspace_url         TEXT NOT NULL,
+  tenant_id             TEXT NOT NULL,
+  license_id            TEXT NOT NULL,
+  plan                  TEXT NOT NULL,
+  plan_name             TEXT NOT NULL,
+  modules               JSONB NOT NULL DEFAULT '[]',
+  add_ons               JSONB NOT NULL DEFAULT '[]',
+  limits                JSONB NOT NULL DEFAULT '{}',
+  activation_status     TEXT NOT NULL DEFAULT 'active',
+  subscription_status   TEXT NOT NULL DEFAULT 'active',
+  renewal_date           TIMESTAMPTZ,
+  api_access             BOOLEAN NOT NULL DEFAULT false,
+  institution            JSONB NOT NULL DEFAULT '{}',
+  admin_account           JSONB NOT NULL DEFAULT '{}',
+  billing                JSONB NOT NULL DEFAULT '{}',
+  invoices                JSONB NOT NULL DEFAULT '[]',
+  created_at              TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS eduos_demo_requests (
+  id                SERIAL PRIMARY KEY,
+  name              TEXT NOT NULL,
+  institution       TEXT NOT NULL,
+  email             TEXT NOT NULL,
+  phone             TEXT NOT NULL DEFAULT '',
+  institution_size  TEXT NOT NULL DEFAULT '',
+  message           TEXT NOT NULL DEFAULT '',
+  status            TEXT NOT NULL DEFAULT 'new',
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 `;

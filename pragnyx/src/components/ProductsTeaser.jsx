@@ -19,7 +19,7 @@ export default function ProductsTeaser({ products = PRODUCTS }) {
                 </span>
               </div>
               <h2 className="font-display font-medium text-3xl sm:text-4xl leading-[1.15] tracking-tight max-w-xl">
-                Four services. One way of thinking.
+                Five services. One way of thinking.
               </h2>
             </div>
             <Link
@@ -36,7 +36,7 @@ export default function ProductsTeaser({ products = PRODUCTS }) {
           {products.map((product, i) => (
             <Reveal key={product.slug} delay={i * 100}>
               <Link
-                href={`/solutions#${product.slug}`}
+                href={product.href || `/solutions#${product.slug}`}
                 className="group block h-full gradient-border cut transition-transform duration-300 hover:-translate-y-1.5"
               >
                 <div className="cut h-full bg-surface px-7 py-8 flex flex-col">

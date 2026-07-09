@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Solutions — PragnyX",
   description:
-    "Business Intelligence, Software Solutions, Data Intelligence, and AI & Automation — four services built on the same idea: deliberate, explainable thinking applied to hard problems.",
+    "Business Intelligence, Software Solutions, Data Intelligence, AI & Automation, and PragnyX EduOS — five services built on the same idea: deliberate, explainable thinking applied to hard problems.",
 };
 
 export default async function SolutionsPage() {
@@ -25,7 +25,7 @@ export default async function SolutionsPage() {
       <main className="flex-1">
         <PageHero
           eyebrow="Solutions"
-          title="Four services. One way of thinking."
+          title="Five services. One way of thinking."
           description="Every PragnyX product starts from the same question: what would this look like if it were reasoned through properly, instead of shipped fast and patched later?"
         >
           <Link

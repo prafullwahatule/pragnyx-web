@@ -15,7 +15,7 @@ import { Trash2, Mail, Check } from "lucide-react";
  * @param {string} description
  * @param {string} apiPath - e.g. "/api/admin/submissions/contact"
  * @param {Array}  initialItems
- * @param {"contact"|"newsletter"|"learning-requests"|"job-applications"|"eduos-demo"} type
+ * @param {"contact"|"newsletter"|"learning-requests"|"job-applications"|"eduos-demo"|"fincore-demo"} type
  * @param {boolean} hasStatus - whether items have a status field with "new"/"read" states
  */
 export default function SubmissionsInbox({ title, description, apiPath, initialItems, type, hasStatus = true }) {
@@ -83,6 +83,19 @@ export default function SubmissionsInbox({ title, description, apiPath, initialI
             <div className="text-xs text-blue">
               {item.email} · {item.phone}
               {item.institution_size ? ` · ${item.institution_size}` : ""}
+            </div>
+            {item.message && <div className="text-sm text-mute">{item.message}</div>}
+          </>
+        );
+      case "fincore-demo":
+        return (
+          <>
+            <div className="text-sm text-paper font-medium">
+              {item.name} <span className="text-mute font-normal">· {item.business}</span>
+            </div>
+            <div className="text-xs text-blue">
+              {item.email} · {item.phone}
+              {item.business_size ? ` · ${item.business_size}` : ""}
             </div>
             {item.message && <div className="text-sm text-mute">{item.message}</div>}
           </>

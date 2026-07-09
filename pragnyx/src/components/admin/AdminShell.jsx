@@ -26,6 +26,7 @@ import {
   ExternalLink,
   Building2,
   CalendarClock,
+  Wallet,
 } from "lucide-react";
 
 const NAV_SECTIONS = [
@@ -57,6 +58,13 @@ const NAV_SECTIONS = [
     items: [
       { href: "/admin/eduos/workspaces", label: "Workspaces", icon: Building2 },
       { href: "/admin/eduos/demo-requests", label: "Demo requests", icon: CalendarClock },
+    ],
+  },
+  {
+    heading: "FinCore",
+    items: [
+      { href: "/admin/fincore/workspaces", label: "Workspaces", icon: Wallet },
+      { href: "/admin/fincore/demo-requests", label: "Demo requests", icon: CalendarClock },
     ],
   },
   {

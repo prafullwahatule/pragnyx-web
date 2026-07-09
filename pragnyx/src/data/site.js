@@ -5,6 +5,7 @@
 export const NAV_LINKS = [
   { href: "/solutions", label: "Solutions" },
   { href: "/eduos", label: "EduOS" },
+  { href: "/fincore", label: "FinCore" },
   // { href: "/learning", label: "Learning" },
   { href: "/about", label: "About" },
   { href: "/careers", label: "Careers" },
@@ -77,6 +78,20 @@ export const PRODUCTS = [
     ],
     color: "violet",
     href: "/eduos",
+  },
+  {
+    slug: "pragnyx-fincore",
+    name: "PragnyX FinCore",
+    tag: "Cloud Accounting ERP + AI Financial OS",
+    summary:
+      "The AI financial operating system for modern businesses — accounting, GST, invoicing, inventory, banking, payroll and compliance from one intelligent cloud platform, replacing disconnected legacy accounting tools.",
+    bullets: [
+      "Executive dashboards for cash flow, revenue, GST summary & outstanding payments/receivables, live",
+      "Full accounting suite — journal, ledger, trial balance, balance sheet, P&L, GST returns & input tax credit",
+      "Inventory, sales, purchase, banking, payroll & compliance in one system, plus a FinCore AI Copilot",
+    ],
+    color: "blue",
+    href: "/fincore",
   },
 ];
 

@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { getPlan } from "./plans";
+import { getEffectivePlan } from "./effectivePlans";
 import { saveWorkspace, getWorkspace } from "@/lib/repo/eduos";
 
 function slugify(name) {
@@ -47,7 +47,7 @@ async function resolveSubdomain(baseSlug, isTaken) {
  * credentials (see /api/eduos/checkout/verify).
  */
 export async function provisionWorkspace({ institution, plan: planId, addOns = [], paymentId }) {
-  const plan = getPlan(planId);
+  const plan = await getEffectivePlan(planId);
   if (!plan) throw new Error(`Unknown plan: ${planId}`);
 
   const baseSlug = slugify(institution.name);

@@ -5,10 +5,10 @@ import { Check } from "lucide-react";
 import { PLANS, formatPrice } from "@/lib/eduos/plans";
 import Reveal from "../Reveal";
 
-export default function PricingTiers({ compact = false }) {
+export default function PricingTiers({ compact = false, plans = PLANS }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 22 }} className="e-pricing-grid">
-      {PLANS.map((plan, i) => (
+      {plans.map((plan, i) => (
         <Reveal key={plan.id} delay={i * 80}>
           <div
             className={`e-card${plan.featured ? " e-glow-ring" : ""}`}

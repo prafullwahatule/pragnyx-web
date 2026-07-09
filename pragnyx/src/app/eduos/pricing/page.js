@@ -4,13 +4,18 @@ import PricingTiers from "@/components/eduos/PricingTiers";
 import ModularAddons from "@/components/eduos/ModularAddons";
 import EduOSFAQ from "@/components/eduos/EduOSFAQ";
 import Reveal from "@/components/Reveal";
+import { getEffectivePlans } from "@/lib/eduos/effectivePlans";
 
 export const metadata = {
   title: "Pricing — PragnyX EduOS",
   description: "Starter, Professional, and Enterprise editions of PragnyX EduOS. Modular licensing — unlock modules like Workflow Builder, Advanced Analytics, and the AI Suite as add-ons.",
 };
 
-export default function EduOSPricingPage() {
+export const dynamic = "force-dynamic";
+
+export default async function EduOSPricingPage() {
+  const plans = await getEffectivePlans();
+
   return (
     <>
       <EduOSNavbar />
@@ -31,7 +36,7 @@ export default function EduOSPricingPage() {
 
         <section className="e-section" style={{ paddingTop: 40 }}>
           <div className="e-shell">
-            <PricingTiers />
+            <PricingTiers plans={plans} />
             <ModularAddons />
           </div>
         </section>

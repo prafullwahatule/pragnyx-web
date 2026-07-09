@@ -1,4 +1,4 @@
-import { getPlan } from "@/lib/eduos/plans";
+import { getEffectivePlan } from "@/lib/eduos/effectivePlans";
 import { getRazorpayClient, isRazorpayConfigured } from "@/lib/eduos/razorpay";
 
 function isValidEmail(email) {
@@ -16,7 +16,7 @@ export async function POST(request) {
   const planId = (body?.planId || "").trim();
   const institution = body?.institution || {};
 
-  const plan = getPlan(planId);
+  const plan = await getEffectivePlan(planId);
   if (!plan) {
     return Response.json({ error: "Unknown plan selected." }, { status: 400 });
   }

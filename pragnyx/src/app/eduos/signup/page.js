@@ -1,7 +1,7 @@
 import EduOSNavbar from "@/components/eduos/EduOSNavbar";
 import EduOSFooter from "@/components/eduos/EduOSFooter";
 import SignupWizard from "@/components/eduos/SignupWizard";
-import { getPlan } from "@/lib/eduos/plans";
+import { getEffectivePlans } from "@/lib/eduos/effectivePlans";
 
 export const metadata = {
   title: "Get Started — PragnyX EduOS",
@@ -10,7 +10,8 @@ export const metadata = {
 
 export default async function EduOSSignupPage({ searchParams }) {
   const params = await searchParams;
-  const requestedPlan = getPlan(params?.plan);
+  const plans = await getEffectivePlans();
+  const requestedPlan = plans.find((p) => p.id === params?.plan);
 
   return (
     <>
@@ -18,7 +19,7 @@ export default async function EduOSSignupPage({ searchParams }) {
       <main>
         <section className="e-dot-grid" style={{ padding: "64px 0 80px" }}>
           <div className="e-shell">
-            <SignupWizard initialPlan={requestedPlan?.id} />
+            <SignupWizard plans={plans} initialPlan={requestedPlan?.id} />
           </div>
         </section>
       </main>

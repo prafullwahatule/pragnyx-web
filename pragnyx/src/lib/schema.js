@@ -235,6 +235,17 @@ CREATE TABLE IF NOT EXISTS eduos_demo_requests (
   created_at        TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Admin-editable price overrides for self-serve EduOS plans (Starter,
+-- Professional). Enterprise stays "Book a Demo" and is never priced here.
+-- Falls back to the defaults in src/lib/eduos/plans.js when no row
+-- exists for a plan yet.
+CREATE TABLE IF NOT EXISTS eduos_plan_prices (
+  plan_id     TEXT PRIMARY KEY,
+  price       INTEGER NOT NULL,
+  currency    TEXT NOT NULL DEFAULT 'INR',
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- ─────────────────────── PragnyX FinCore ───────────────────────
 -- Multi-tenant workspace records created by the self-serve checkout flow
 -- (see src/lib/fincore/provisioning.js) and demo requests from the

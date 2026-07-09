@@ -1,6 +1,6 @@
 import { isRazorpayConfigured, verifyPaymentSignature } from "@/lib/eduos/razorpay";
 import { provisionWorkspace } from "@/lib/eduos/provisioning";
-import { getPlan } from "@/lib/eduos/plans";
+import { getEffectivePlan } from "@/lib/eduos/effectivePlans";
 
 export async function POST(request) {
   let body;
@@ -23,7 +23,7 @@ export async function POST(request) {
     return Response.json({ error: "Missing payment confirmation details." }, { status: 400 });
   }
 
-  const plan = getPlan(planId);
+  const plan = await getEffectivePlan(planId);
   if (!plan) {
     return Response.json({ error: "Unknown plan." }, { status: 400 });
   }

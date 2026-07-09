@@ -57,6 +57,7 @@ const NAV_SECTIONS = [
     heading: "EduOS",
     items: [
       { href: "/admin/eduos/workspaces", label: "Workspaces", icon: Building2 },
+      { href: "/admin/eduos/pricing", label: "Pricing", icon: Tag },
       { href: "/admin/eduos/demo-requests", label: "Demo requests", icon: CalendarClock },
     ],
   },

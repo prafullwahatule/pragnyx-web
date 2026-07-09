@@ -14,8 +14,13 @@ import DemoForm from "@/components/eduos/DemoForm";
 import Reveal from "@/components/Reveal";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { getEffectivePlans } from "@/lib/eduos/effectivePlans";
 
-export default function EduOSPage() {
+export const dynamic = "force-dynamic";
+
+export default async function EduOSPage() {
+  const plans = await getEffectivePlans();
+
   return (
     <>
       <EduOSNavbar />
@@ -57,7 +62,7 @@ export default function EduOSPage() {
               </div>
             </Reveal>
             <div style={{ marginTop: 40 }}>
-              <PricingTiers compact />
+              <PricingTiers compact plans={plans} />
             </div>
             <ModularAddons />
           </div>

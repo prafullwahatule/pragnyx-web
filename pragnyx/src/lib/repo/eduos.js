@@ -172,3 +172,42 @@ export async function deleteEduOSDemoRequest(id) {
   await query("DELETE FROM eduos_demo_requests WHERE id = $1", [id]);
   return true;
 }
+
+// ─────────────────────── Plan price overrides ───────────────────────
+// Admin-editable prices for self-serve plans. Returns a plain
+// { [planId]: price } map — components merge this over the defaults in
+// src/lib/eduos/plans.js so a missing row just falls back silently.
+
+const globalPrices = globalThis;
+if (!globalPrices.__eduosPlanPrices) globalPrices.__eduosPlanPrices = new Map();
+const memPlanPrices = globalPrices.__eduosPlanPrices;
+
+export async function getPlanPriceOverrides() {
+  if (!isDbConfigured()) {
+    return Object.fromEntries(memPlanPrices);
+  }
+  await ensureSchema();
+  const res = await query("SELECT plan_id, price FROM eduos_plan_prices");
+  const map = {};
+  for (const row of res?.rows || []) map[row.plan_id] = Number(row.price);
+  return map;
+}
+
+export async function setPlanPrice(planId, price) {
+  const numericPrice = Number(price);
+  if (!Number.isFinite(numericPrice) || numericPrice < 0) {
+    throw new Error("Price must be a non-negative number.");
+  }
+  if (!isDbConfigured()) {
+    memPlanPrices.set(planId, numericPrice);
+    return { planId, price: numericPrice };
+  }
+  await ensureSchema();
+  await query(
+    `INSERT INTO eduos_plan_prices (plan_id, price, updated_at)
+     VALUES ($1, $2, now())
+     ON CONFLICT (plan_id) DO UPDATE SET price = EXCLUDED.price, updated_at = now()`,
+    [planId, numericPrice]
+  );
+  return { planId, price: numericPrice };
+}

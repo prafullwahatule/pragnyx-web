@@ -51,11 +51,18 @@ export function createContentRepo({ table, idColumn = "id", idIsText = false, js
 
   async function create(data) {
     await ensureSchema();
+    let nextPosition = 0;
+    if (cols.includes("position") && (data.position === undefined || data.position === null)) {
+      const posRes = await query(`SELECT COALESCE(MAX(position), -1) + 1 AS next FROM ${table}`);
+      nextPosition = posRes?.rows?.[0]?.next ?? 0;
+    }
     const colNames = idIsText ? [idColumn, ...cols] : cols;
     const values = colNames.map((col) => {
       const camel = col.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
       const v = camel === idColumn ? data[idColumn] : data[camel];
       if (jsonColumns.includes(col)) return JSON.stringify(v ?? []);
+      if (col === "position" && (v === undefined || v === null)) return nextPosition;
+      if (col === "visible" && (v === undefined || v === null)) return true;
       return v;
     });
     const placeholders = colNames.map((_, i) => `$${i + 1}`).join(", ");
@@ -68,8 +75,16 @@ export function createContentRepo({ table, idColumn = "id", idIsText = false, js
 
   async function update(id, data) {
     await ensureSchema();
-    const setClauses = cols.map((col, i) => `${col} = $${i + 1}`).join(", ");
-    const values = cols.map((col) => {
+    const presentCols = cols.filter((col) => {
+      const camel = col.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+      return Object.prototype.hasOwnProperty.call(data, camel);
+    });
+    if (presentCols.length === 0) {
+      const res = await query(`SELECT * FROM ${table} WHERE ${idColumn} = $1`, [id]);
+      return res.rows[0] ? rowToEntity(res.rows[0]) : null;
+    }
+    const setClauses = presentCols.map((col, i) => `${col} = $${i + 1}`).join(", ");
+    const values = presentCols.map((col) => {
       const camel = col.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
       const v = data[camel];
       if (jsonColumns.includes(col)) return JSON.stringify(v ?? []);
@@ -77,7 +92,7 @@ export function createContentRepo({ table, idColumn = "id", idIsText = false, js
     });
     values.push(id);
     const res = await query(
-      `UPDATE ${table} SET ${setClauses} WHERE ${idColumn} = $${cols.length + 1} RETURNING *`,
+      `UPDATE ${table} SET ${setClauses} WHERE ${idColumn} = $${presentCols.length + 1} RETURNING *`,
       values
     );
     return res.rows[0] ? rowToEntity(res.rows[0]) : null;

@@ -11,8 +11,8 @@
 // to a visitor — and every amount actually charged at checkout —
 // reflects the latest admin-set value.
 
-import { PLANS } from "./plans";
-import { getPlanPriceOverrides } from "@/lib/repo/fincore";
+import { PLANS, ADD_ONS } from "./plans";
+import { getPlanPriceOverrides, getAddonPriceOverrides } from "@/lib/repo/fincore";
 
 export async function getEffectivePlans() {
   const overrides = await getPlanPriceOverrides();
@@ -24,4 +24,15 @@ export async function getEffectivePlans() {
 export async function getEffectivePlan(planId) {
   const plans = await getEffectivePlans();
   return plans.find((p) => p.id === planId) || null;
+}
+
+/** Same merge pattern as getEffectivePlans(), for the ADD_ONS catalogue. */
+export async function getEffectiveAddOns() {
+  const overrides = await getAddonPriceOverrides();
+  return ADD_ONS.map((a) => (overrides[a.id] != null ? { ...a, price: overrides[a.id] } : { ...a }));
+}
+
+export async function getEffectiveAddOn(addonId) {
+  const addOns = await getEffectiveAddOns();
+  return addOns.find((a) => a.id === addonId) || null;
 }

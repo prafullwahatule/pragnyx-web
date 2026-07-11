@@ -18,6 +18,14 @@ export const metadata = {
   title: "About — PragnyX",
   description:
     "PragnyX is a future-focused brand building reasoning-first products, custom engineering, and one-to-one mentorship — engineered, not predicted.",
+  alternates: { canonical: "https://pragnyx.in/about" },
+  openGraph: {
+    title: "About — PragnyX",
+    description:
+      "PragnyX is a future-focused brand building reasoning-first products, custom engineering, and one-to-one mentorship — engineered, not predicted.",
+    url: "https://pragnyx.in/about",
+    type: "website",
+  },
 };
 
 export default async function AboutPage() {

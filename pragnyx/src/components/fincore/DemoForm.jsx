@@ -10,6 +10,8 @@ export default function DemoForm() {
   const [values, setValues] = useState({ name: "", business: "", email: "", phone: "", businessSize: "", message: "" });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | submitting | done | error
+  // Honeypot — see Contact.jsx (src/components) for the full explanation.
+  const [website, setWebsite] = useState("");
 
   const update = (field) => (e) => setValues((v) => ({ ...v, [field]: e.target.value }));
 
@@ -21,7 +23,7 @@ export default function DemoForm() {
       const res = await fetch("/api/fincore/demo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, website }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -48,6 +50,16 @@ export default function DemoForm() {
 
   return (
     <form onSubmit={submit} className="e-card" style={{ padding: 32, maxWidth: 560, margin: "0 auto", display: "flex", flexDirection: "column", gap: 18 }}>
+      <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: "absolute", left: -9999, width: 1, height: 1, opacity: 0 }}
+      />
       <div className="e-field">
         <label className="e-label" htmlFor="d-name">Name</label>
         <input id="d-name" className="e-input" value={values.name} onChange={update("name")} required />

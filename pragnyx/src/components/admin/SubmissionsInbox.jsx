@@ -139,7 +139,15 @@ export default function SubmissionsInbox({ title, description, apiPath, initialI
                 <div className="flex-1 min-w-0 grid gap-1">
                   {renderFields(item)}
                   <p className="text-xs text-mute mt-1">
-                    {item.created_at ? new Date(item.created_at).toLocaleString() : ""}
+                    {item.created_at
+                      ? new Date(item.created_at).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : ""}
                   </p>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">

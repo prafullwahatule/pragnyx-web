@@ -2,6 +2,7 @@ import "@fontsource-variable/space-grotesk";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/jetbrains-mono";
 import "./globals.css";
+import Script from "next/script";
 
 export const metadata = {
   metadataBase: new URL("https://pragnyx.in"),
@@ -40,14 +41,9 @@ export const metadata = {
     title: "PragnyX — Wisdom for the Next Frontier",
     description:
       "Future-focused innovation, creativity, and intelligent thinking. At PragnyX, the future is not predicted — it is engineered.",
-    images: [
-      {
-        url: "/og/og-default.png", // create a 1200×630 image
-        width: 1200,
-        height: 630,
-        alt: "PragnyX — Wisdom for the Next Frontier",
-      },
-    ],
+    // Image comes from src/app/opengraph-image.js (Next's file convention) —
+    // Next generates it and injects og:image (and the twitter:image
+    // fallback below) automatically, so there's nothing to list here.
   },
 
   // Twitter / X
@@ -58,7 +54,7 @@ export const metadata = {
       "Future-focused innovation, creativity, and intelligent thinking. The future is not predicted — it is engineered.",
     site: "@pragnyx",      // update to your handle
     creator: "@pragnyx",   // update to your handle
-    images: ["/og/og-default.png"],
+    // No explicit images — falls back to opengraph-image.js, same as above.
   },
 
   // Icons
@@ -110,6 +106,14 @@ const jsonLd = {
 };
 
 export default function RootLayout({ children }) {
+  // Plausible — privacy-friendly, cookieless analytics (not Google
+  // Analytics). Only renders once NEXT_PUBLIC_PLAUSIBLE_DOMAIN is set
+  // (see .env.example), so local/dev/preview environments don't send
+  // traffic anywhere by default. Covers the whole site — this layout
+  // wraps every route, including /eduos/* and /fincore/*.
+  const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
+  const plausibleSrc = process.env.NEXT_PUBLIC_PLAUSIBLE_SRC || "https://plausible.io/js/script.js";
+
   return (
     <html lang="en" className="h-full antialiased">
       <head>
@@ -120,6 +124,9 @@ export default function RootLayout({ children }) {
       </head>
       <body className="min-h-full flex flex-col bg-void text-paper selection:bg-fuchsia-500/30 selection:text-white">
         {children}
+        {plausibleDomain && (
+          <Script defer data-domain={plausibleDomain} src={plausibleSrc} strategy="afterInteractive" />
+        )}
       </body>
     </html>
   );

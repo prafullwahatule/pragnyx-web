@@ -27,6 +27,9 @@ export default function Contact() {
   const [status, setStatus] = useState("idle");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState({});
+  // Honeypot: hidden from real users via CSS below; bots that fill every
+  // field they find trip this, and the server quietly no-ops the request.
+  const [website, setWebsite] = useState("");
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -41,7 +44,7 @@ export default function Contact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, website }),
       });
       const data = await res.json();
 
@@ -150,6 +153,18 @@ export default function Contact() {
           <Reveal className="lg:col-span-8" delay={200}>
             <form onSubmit={handleSubmit} className="gradient-border cut">
               <div className="cut bg-surface px-8 py-9 sm:px-10 sm:py-10">
+                {/* Honeypot — hidden from sighted users and screen readers;
+                    left empty by humans, filled in by form-filling bots. */}
+                <input
+                  type="text"
+                  name="website"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                />
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
                     <label

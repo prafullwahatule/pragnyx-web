@@ -82,7 +82,13 @@ export default function WorkspacesTable({
                   </div>
                   <div className="text-xs text-mute">
                     Tenant: {item.tenantId} · License: {item.licenseId} · Renews{" "}
-                    {item.renewalDate ? new Date(item.renewalDate).toLocaleDateString() : "—"}
+                    {item.renewalDate
+                    ? new Date(item.renewalDate).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      })
+                    : "—"}
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">

@@ -14,6 +14,14 @@ export const metadata = {
   title: "Solutions — PragnyX",
   description:
     "Business Intelligence, Software Solutions, Data Intelligence, AI & Automation, and PragnyX EduOS — five services built on the same idea: deliberate, explainable thinking applied to hard problems.",
+  alternates: { canonical: "https://pragnyx.in/solutions" },
+  openGraph: {
+    title: "Solutions — PragnyX",
+    description:
+      "Business Intelligence, Software Solutions, Data Intelligence, AI & Automation, and PragnyX EduOS — five services built on the same idea: deliberate, explainable thinking applied to hard problems.",
+    url: "https://pragnyx.in/solutions",
+    type: "website",
+  },
 };
 
 export default async function SolutionsPage() {

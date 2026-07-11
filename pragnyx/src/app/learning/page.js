@@ -10,6 +10,14 @@ export const metadata = {
   title: "PragnyX Learning — One-to-one mentorship",
   description:
     "Learn one-to-one from working engineers, designers, and product leads. Pick a mentor, book a session, make real progress — no cohorts.",
+  alternates: { canonical: "https://pragnyx.in/learning" },
+  openGraph: {
+    title: "PragnyX Learning — One-to-one mentorship",
+    description:
+      "Learn one-to-one from working engineers, designers, and product leads. Pick a mentor, book a session, make real progress — no cohorts.",
+    url: "https://pragnyx.in/learning",
+    type: "website",
+  },
 };
 
 export default async function LearningPage() {

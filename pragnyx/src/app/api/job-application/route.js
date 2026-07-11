@@ -1,16 +1,24 @@
 import { jobsRepo } from "@/lib/repo/jobs";
 import { createJobApplication } from "@/lib/repo/submissions";
+import { enforceRateLimit, isHoneypotTripped } from "@/lib/spamGuard";
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 export async function POST(request) {
+  const limited = await enforceRateLimit(request, "job-application");
+  if (limited) return limited;
+
   let body;
   try {
     body = await request.json();
   } catch {
     return Response.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  if (isHoneypotTripped(body)) {
+    return Response.json({ ok: true, message: "Application sent. We'll be in touch." });
   }
 
   const jobId = (body?.jobId || "").trim();

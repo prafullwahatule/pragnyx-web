@@ -9,6 +9,14 @@ import { getEffectivePlans } from "@/lib/fincore/effectivePlans";
 export const metadata = {
   title: "Pricing — PragnyX FinCore",
   description: "Starter, Professional, and Enterprise editions of PragnyX FinCore. Modular licensing — unlock modules like Inventory Pro, Payroll, and the AI Suite as add-ons.",
+  alternates: { canonical: "https://pragnyx.in/fincore/pricing" },
+  openGraph: {
+    title: "Pricing — PragnyX FinCore",
+    description: "Starter, Professional, and Enterprise editions of PragnyX FinCore. Modular licensing — unlock modules like Inventory Pro, Payroll, and the AI Suite as add-ons.",
+    url: "https://pragnyx.in/fincore/pricing",
+    siteName: "PragnyX FinCore",
+    type: "website",
+  },
 };
 
 export const dynamic = "force-dynamic";

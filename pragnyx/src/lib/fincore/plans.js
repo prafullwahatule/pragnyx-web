@@ -89,15 +89,19 @@ export const PLANS = [
   },
 ];
 
+// NOTE ON PRICING: same placeholder convention as PLANS above — these are
+// default monthly INR prices, overridable per-add-on from the admin panel
+// (Admin → FinCore → Pricing) via fincore_addon_prices. Swap for real
+// numbers before going live.
 export const ADD_ONS = [
-  { id: "inventory-pro", name: "Inventory Pro", description: "Batch tracking, serial tracking & warehouse-level reorder alerts." },
-  { id: "advanced-analytics", name: "Advanced Analytics", description: "Cash flow forecasting & revenue/expense trend modelling." },
-  { id: "payroll", name: "Payroll", description: "Employee records, salary runs & attendance integration." },
-  { id: "ai-suite", name: "AI Suite", description: "FinCore AI Copilot for natural-language accounting queries." },
-  { id: "multi-branch", name: "Multi Branch", description: "Consolidated reporting across branches and companies." },
-  { id: "extra-storage", name: "Extra Storage", description: "+100GB document & ledger storage." },
-  { id: "extra-ai-credits", name: "Extra AI Credits", description: "+2,000 AI Copilot credits / month." },
-  { id: "api-access", name: "API Access", description: "REST API keys for integrating third-party systems." },
+  { id: "inventory-pro", name: "Inventory Pro", description: "Batch tracking, serial tracking & warehouse-level reorder alerts.", price: 1499 },
+  { id: "advanced-analytics", name: "Advanced Analytics", description: "Cash flow forecasting & revenue/expense trend modelling.", price: 1499 },
+  { id: "payroll", name: "Payroll", description: "Employee records, salary runs & attendance integration.", price: 1999 },
+  { id: "ai-suite", name: "AI Suite", description: "FinCore AI Copilot for natural-language accounting queries.", price: 1999 },
+  { id: "multi-branch", name: "Multi Branch", description: "Consolidated reporting across branches and companies.", price: 1799 },
+  { id: "extra-storage", name: "Extra Storage", description: "+100GB document & ledger storage.", price: 499 },
+  { id: "extra-ai-credits", name: "Extra AI Credits", description: "+2,000 AI Copilot credits / month.", price: 799 },
+  { id: "api-access", name: "API Access", description: "REST API keys for integrating third-party systems.", price: 1299 },
 ];
 
 export function getPlan(planId) {

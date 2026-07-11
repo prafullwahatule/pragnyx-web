@@ -43,6 +43,7 @@ export async function POST(request) {
       plan: planId,
       addOns: addOns || [],
       paymentId,
+      orderId,
     });
 
     return Response.json({ ok: true, workspace });

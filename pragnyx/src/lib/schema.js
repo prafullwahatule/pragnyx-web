@@ -196,6 +196,33 @@ CREATE TABLE IF NOT EXISTS job_applications (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- ─────────────────────── Webhook idempotency ───────────────────────
+-- Shared between EduOS and FinCore's Razorpay webhooks — Razorpay can and
+-- does send the same event more than once (retries on a slow/failed
+-- response), so every webhook checks this table before acting on an
+-- event.id and inserts into it once handled.
+CREATE TABLE IF NOT EXISTS webhook_events (
+  event_id     TEXT PRIMARY KEY,
+  product      TEXT NOT NULL,
+  event_type   TEXT NOT NULL DEFAULT '',
+  received_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- ─────────────────────── Form spam protection ───────────────────────
+-- Backs the rate limiter in src/lib/spamGuard.js (max 5 submissions per
+-- IP per 10 minutes per public form route: contact, newsletter, job
+-- application, EduOS/FinCore demo requests). One row per submission
+-- attempt; bucket_key is "<routeName>:<ip>". Old rows are pruned
+-- opportunistically by the limiter itself, so this table never grows
+-- unbounded even without a cron job.
+CREATE TABLE IF NOT EXISTS rate_limit_hits (
+  id           SERIAL PRIMARY KEY,
+  bucket_key   TEXT NOT NULL,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_rate_limit_hits_bucket_key ON rate_limit_hits (bucket_key, created_at);
+
 -- ─────────────────────── PragnyX EduOS ───────────────────────
 -- Multi-tenant workspace records created by the self-serve checkout flow
 -- (see src/lib/eduos/provisioning.js) and demo requests from the Enterprise
@@ -220,8 +247,17 @@ CREATE TABLE IF NOT EXISTS eduos_workspaces (
   admin_account           JSONB NOT NULL DEFAULT '{}',
   billing                JSONB NOT NULL DEFAULT '{}',
   invoices                JSONB NOT NULL DEFAULT '[]',
+  onboarding_completed    BOOLEAN NOT NULL DEFAULT false,
   created_at              TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Added after the table above already shipped — ADD COLUMN IF NOT EXISTS
+-- makes this a no-op on fresh installs (column is already in the CREATE
+-- TABLE) and a real migration on any workspace table created before this
+-- flag existed. True once the item-9 onboarding wizard is finished or
+-- explicitly skipped; gates the /eduos/dashboard redirect the same way
+-- admin_account.mustResetPassword gates /eduos/reset-password.
+ALTER TABLE eduos_workspaces ADD COLUMN IF NOT EXISTS onboarding_completed BOOLEAN NOT NULL DEFAULT false;
 
 CREATE TABLE IF NOT EXISTS eduos_demo_requests (
   id                SERIAL PRIMARY KEY,
@@ -241,6 +277,16 @@ CREATE TABLE IF NOT EXISTS eduos_demo_requests (
 -- exists for a plan yet.
 CREATE TABLE IF NOT EXISTS eduos_plan_prices (
   plan_id     TEXT PRIMARY KEY,
+  price       INTEGER NOT NULL,
+  currency    TEXT NOT NULL DEFAULT 'INR',
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Admin-editable price overrides for EduOS add-ons (see ADD_ONS in
+-- src/lib/eduos/plans.js). Same pattern as eduos_plan_prices — falls back
+-- to the default price in plans.js when no row exists yet.
+CREATE TABLE IF NOT EXISTS eduos_addon_prices (
+  addon_id    TEXT PRIMARY KEY,
   price       INTEGER NOT NULL,
   currency    TEXT NOT NULL DEFAULT 'INR',
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -271,8 +317,14 @@ CREATE TABLE IF NOT EXISTS fincore_workspaces (
   admin_account           JSONB NOT NULL DEFAULT '{}',
   billing                JSONB NOT NULL DEFAULT '{}',
   invoices                JSONB NOT NULL DEFAULT '[]',
+  onboarding_completed    BOOLEAN NOT NULL DEFAULT false,
   created_at              TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- See the matching comment on eduos_workspaces above — same reasoning,
+-- same "gates /fincore/dashboard the way mustResetPassword gates
+-- /fincore/reset-password" purpose.
+ALTER TABLE fincore_workspaces ADD COLUMN IF NOT EXISTS onboarding_completed BOOLEAN NOT NULL DEFAULT false;
 
 CREATE TABLE IF NOT EXISTS fincore_demo_requests (
   id                SERIAL PRIMARY KEY,
@@ -292,6 +344,16 @@ CREATE TABLE IF NOT EXISTS fincore_demo_requests (
 -- exists for a plan yet.
 CREATE TABLE IF NOT EXISTS fincore_plan_prices (
   plan_id     TEXT PRIMARY KEY,
+  price       INTEGER NOT NULL,
+  currency    TEXT NOT NULL DEFAULT 'INR',
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Admin-editable price overrides for FinCore add-ons (see ADD_ONS in
+-- src/lib/fincore/plans.js). Same pattern as fincore_plan_prices — falls
+-- back to the default price in plans.js when no row exists yet.
+CREATE TABLE IF NOT EXISTS fincore_addon_prices (
+  addon_id    TEXT PRIMARY KEY,
   price       INTEGER NOT NULL,
   currency    TEXT NOT NULL DEFAULT 'INR',
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()

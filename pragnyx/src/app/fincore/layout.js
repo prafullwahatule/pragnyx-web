@@ -7,6 +7,10 @@ export const metadata = {
   title: "PragnyX FinCore — The AI Financial Operating System for Modern Businesses",
   description:
     "Manage accounting, GST, invoicing, inventory, banking, payroll, compliance and business finance from one intelligent cloud platform.",
+  // /fincore/page.js has no metadata of its own, so this is what the
+  // /fincore home page actually uses — every other page under
+  // /fincore/* sets its own alternates.canonical and overrides this.
+  alternates: { canonical: "https://pragnyx.in/fincore" },
   openGraph: {
     title: "PragnyX FinCore — The AI Financial Operating System for Modern Businesses",
     description:

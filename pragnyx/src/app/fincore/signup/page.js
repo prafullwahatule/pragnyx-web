@@ -6,6 +6,14 @@ import { getEffectivePlans } from "@/lib/fincore/effectivePlans";
 export const metadata = {
   title: "Get Started — PragnyX FinCore",
   description: "Choose your plan, add your business details, and get your FinCore workspace provisioned automatically.",
+  alternates: { canonical: "https://pragnyx.in/fincore/signup" },
+  openGraph: {
+    title: "Get Started — PragnyX FinCore",
+    description: "Choose your plan, add your business details, and get your FinCore workspace provisioned automatically.",
+    url: "https://pragnyx.in/fincore/signup",
+    siteName: "PragnyX FinCore",
+    type: "website",
+  },
 };
 
 export default async function FinCoreSignupPage({ searchParams }) {

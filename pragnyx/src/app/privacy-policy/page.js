@@ -9,6 +9,14 @@ export const metadata = {
   title: "Privacy Policy — PragnyX",
   description:
     "How PragnyX collects, uses, and protects your information across our products, services, and PragnyX Learning.",
+  alternates: { canonical: "https://pragnyx.in/privacy-policy" },
+  openGraph: {
+    title: "Privacy Policy — PragnyX",
+    description:
+      "How PragnyX collects, uses, and protects your information across our products, services, and PragnyX Learning.",
+    url: "https://pragnyx.in/privacy-policy",
+    type: "website",
+  },
 };
 
 const SECTIONS = [

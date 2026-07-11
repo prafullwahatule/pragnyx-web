@@ -25,6 +25,7 @@ function rowToWorkspace(row) {
     admin: row.admin_account || {},
     billing: row.billing || {},
     invoices: row.invoices || [],
+    onboardingCompleted: Boolean(row.onboarding_completed),
     createdAt: row.created_at,
   };
 }
@@ -82,18 +83,136 @@ export async function listWorkspaces() {
   return res ? res.rows.map(rowToWorkspace) : [];
 }
 
-export async function updateWorkspaceSubscriptionStatus(institutionId, status) {
+/**
+ * Updates a workspace's subscription state. Accepts either a plain status
+ * string (existing admin-panel usage: activate/suspend) or a patch object
+ * for the richer webhook-driven updates: { status, renewalDate,
+ * billingPatch, addInvoice }. `billingPatch` is shallow-merged into the
+ * existing `billing` blob; `addInvoice` appends one invoice.
+ */
+export async function updateWorkspaceSubscriptionStatus(institutionId, statusOrPatch) {
+  const patch = typeof statusOrPatch === "string" ? { status: statusOrPatch } : statusOrPatch || {};
+  const { status, renewalDate, billingPatch, addInvoice } = patch;
+
+  const existing = await getWorkspace(institutionId);
+  if (!existing) return null;
+
+  const nextBilling = billingPatch ? { ...existing.billing, ...billingPatch } : existing.billing;
+  const nextInvoices = addInvoice ? [...(existing.invoices || []), addInvoice] : existing.invoices;
+
   if (!isDbConfigured()) {
-    const existing = memWorkspaces.get(institutionId);
-    if (!existing) return null;
-    const updated = { ...existing, subscriptionStatus: status };
+    const updated = {
+      ...existing,
+      ...(status ? { subscriptionStatus: status } : {}),
+      ...(renewalDate ? { renewalDate } : {}),
+      billing: nextBilling,
+      invoices: nextInvoices,
+    };
+    memWorkspaces.set(institutionId, updated);
+    return updated;
+  }
+
+  await ensureSchema();
+  const res = await query(
+    `UPDATE eduos_workspaces SET
+       subscription_status = COALESCE($1, subscription_status),
+       renewal_date = COALESCE($2, renewal_date),
+       billing = $3,
+       invoices = $4
+     WHERE institution_id = $5 RETURNING *`,
+    [status || null, renewalDate || null, JSON.stringify(nextBilling || {}), JSON.stringify(nextInvoices || []), institutionId]
+  );
+  return res?.rows?.[0] ? rowToWorkspace(res.rows[0]) : null;
+}
+
+/**
+ * Finds the workspace whose most recent checkout order matches this
+ * Razorpay order ID — the link the webhook uses to resolve which
+ * workspace a payment/refund event belongs to (see
+ * src/lib/eduos/provisioning.js, which stamps `billing.razorpayOrderId`).
+ */
+export async function getWorkspaceByOrderId(orderId) {
+  if (!orderId) return null;
+  if (!isDbConfigured()) {
+    for (const ws of memWorkspaces.values()) {
+      if (ws?.billing?.razorpayOrderId === orderId) return ws;
+    }
+    return null;
+  }
+  await ensureSchema();
+  const res = await query(
+    "SELECT * FROM eduos_workspaces WHERE billing->>'razorpayOrderId' = $1 LIMIT 1",
+    [orderId]
+  );
+  return res?.rows?.[0] ? rowToWorkspace(res.rows[0]) : null;
+}
+
+/**
+ * Patches the `admin` (admin_account) blob on a workspace — used by the
+ * customer login/reset-password flow to set a real `passwordHash`, clear
+ * the one-time `tempPassword`, and flip `mustResetPassword`. A read-modify
+ * -write against the JSONB column, same convention as the rest of this
+ * store — no schema migration needed since admin_account is already JSONB.
+ */
+export async function updateWorkspaceAdmin(institutionId, adminPatch) {
+  const existing = await getWorkspace(institutionId);
+  if (!existing) return null;
+  const nextAdmin = { ...existing.admin, ...adminPatch };
+
+  if (!isDbConfigured()) {
+    const updated = { ...existing, admin: nextAdmin };
     memWorkspaces.set(institutionId, updated);
     return updated;
   }
   await ensureSchema();
   const res = await query(
-    "UPDATE eduos_workspaces SET subscription_status = $1 WHERE institution_id = $2 RETURNING *",
-    [status, institutionId]
+    "UPDATE eduos_workspaces SET admin_account = $1 WHERE institution_id = $2 RETURNING *",
+    [JSON.stringify(nextAdmin), institutionId]
+  );
+  return res?.rows?.[0] ? rowToWorkspace(res.rows[0]) : null;
+}
+
+/**
+ * Patches the `institution` blob — used by the post-login onboarding
+ * wizard's "confirm institution details" step. Same read-modify-write
+ * convention as updateWorkspaceAdmin() above, against the other JSONB
+ * column on this table.
+ */
+export async function updateWorkspaceInstitution(institutionId, institutionPatch) {
+  const existing = await getWorkspace(institutionId);
+  if (!existing) return null;
+  const nextInstitution = { ...existing.institution, ...institutionPatch };
+
+  if (!isDbConfigured()) {
+    const updated = { ...existing, institution: nextInstitution };
+    memWorkspaces.set(institutionId, updated);
+    return updated;
+  }
+  await ensureSchema();
+  const res = await query(
+    "UPDATE eduos_workspaces SET institution = $1 WHERE institution_id = $2 RETURNING *",
+    [JSON.stringify(nextInstitution), institutionId]
+  );
+  return res?.rows?.[0] ? rowToWorkspace(res.rows[0]) : null;
+}
+
+/**
+ * Marks the post-login onboarding wizard as done (finished OR explicitly
+ * skipped — the caller decides which, this just flips the flag) so it
+ * never shows again. See src/proxy.js for the redirect this gates.
+ */
+export async function completeOnboarding(institutionId) {
+  if (!isDbConfigured()) {
+    const existing = memWorkspaces.get(institutionId);
+    if (!existing) return null;
+    const updated = { ...existing, onboardingCompleted: true };
+    memWorkspaces.set(institutionId, updated);
+    return updated;
+  }
+  await ensureSchema();
+  const res = await query(
+    "UPDATE eduos_workspaces SET onboarding_completed = true WHERE institution_id = $1 RETURNING *",
+    [institutionId]
   );
   return res?.rows?.[0] ? rowToWorkspace(res.rows[0]) : null;
 }
@@ -210,4 +329,61 @@ export async function setPlanPrice(planId, price) {
     [planId, numericPrice]
   );
   return { planId, price: numericPrice };
+}
+
+// Admin-editable prices for add-ons — identical pattern to the plan-price
+// overrides above, just against eduos_addon_prices / ADD_ONS instead.
+const globalAddonPrices = globalThis;
+if (!globalAddonPrices.__eduosAddonPrices) globalAddonPrices.__eduosAddonPrices = new Map();
+const memAddonPrices = globalAddonPrices.__eduosAddonPrices;
+
+export async function getAddonPriceOverrides() {
+  if (!isDbConfigured()) {
+    return Object.fromEntries(memAddonPrices);
+  }
+  await ensureSchema();
+  const res = await query("SELECT addon_id, price FROM eduos_addon_prices");
+  const map = {};
+  for (const row of res?.rows || []) map[row.addon_id] = Number(row.price);
+  return map;
+}
+
+export async function setAddonPrice(addonId, price) {
+  const numericPrice = Number(price);
+  if (!Number.isFinite(numericPrice) || numericPrice < 0) {
+    throw new Error("Price must be a non-negative number.");
+  }
+  if (!isDbConfigured()) {
+    memAddonPrices.set(addonId, numericPrice);
+    return { addonId, price: numericPrice };
+  }
+  await ensureSchema();
+  await query(
+    `INSERT INTO eduos_addon_prices (addon_id, price, updated_at)
+     VALUES ($1, $2, now())
+     ON CONFLICT (addon_id) DO UPDATE SET price = EXCLUDED.price, updated_at = now()`,
+    [addonId, numericPrice]
+  );
+  return { addonId, price: numericPrice };
+}
+
+/**
+ * Persists a workspace's active add-on list (the "Modules" tab's "Add
+ * module" action). Proration/actual billing isn't wired up yet per the
+ * brief — this just makes the selection stick and visible.
+ */
+export async function updateWorkspaceAddOns(institutionId, addOns) {
+  if (!isDbConfigured()) {
+    const existing = memWorkspaces.get(institutionId);
+    if (!existing) return null;
+    const updated = { ...existing, addOns };
+    memWorkspaces.set(institutionId, updated);
+    return updated;
+  }
+  await ensureSchema();
+  const res = await query(
+    "UPDATE eduos_workspaces SET add_ons = $1 WHERE institution_id = $2 RETURNING *",
+    [JSON.stringify(addOns || []), institutionId]
+  );
+  return res?.rows?.[0] ? rowToWorkspace(res.rows[0]) : null;
 }

@@ -9,6 +9,14 @@ import { getEffectivePlans } from "@/lib/eduos/effectivePlans";
 export const metadata = {
   title: "Pricing — PragnyX EduOS",
   description: "Starter, Professional, and Enterprise editions of PragnyX EduOS. Modular licensing — unlock modules like Workflow Builder, Advanced Analytics, and the AI Suite as add-ons.",
+  alternates: { canonical: "https://pragnyx.in/eduos/pricing" },
+  openGraph: {
+    title: "Pricing — PragnyX EduOS",
+    description: "Starter, Professional, and Enterprise editions of PragnyX EduOS. Modular licensing — unlock modules like Workflow Builder, Advanced Analytics, and the AI Suite as add-ons.",
+    url: "https://pragnyx.in/eduos/pricing",
+    siteName: "PragnyX EduOS",
+    type: "website",
+  },
 };
 
 export const dynamic = "force-dynamic";

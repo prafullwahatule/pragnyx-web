@@ -3,6 +3,12 @@ import { ArrowUpRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+export const metadata = {
+  title: "Page not found — PragnyX",
+  description: "The page you're looking for doesn't exist, or has moved.",
+  robots: { index: false, follow: true },
+};
+
 export default function NotFound() {
   return (
     <>

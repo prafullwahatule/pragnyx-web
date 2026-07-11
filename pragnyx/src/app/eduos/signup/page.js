@@ -6,6 +6,14 @@ import { getEffectivePlans } from "@/lib/eduos/effectivePlans";
 export const metadata = {
   title: "Get Started — PragnyX EduOS",
   description: "Choose your plan, add your institution details, and get your EduOS workspace provisioned automatically.",
+  alternates: { canonical: "https://pragnyx.in/eduos/signup" },
+  openGraph: {
+    title: "Get Started — PragnyX EduOS",
+    description: "Choose your plan, add your institution details, and get your EduOS workspace provisioned automatically.",
+    url: "https://pragnyx.in/eduos/signup",
+    siteName: "PragnyX EduOS",
+    type: "website",
+  },
 };
 
 export default async function EduOSSignupPage({ searchParams }) {

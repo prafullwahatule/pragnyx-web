@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   LayoutDashboard, CreditCard, Blocks, Users, LifeBuoy, Loader2,
-  Download, ArrowUpCircle, Check, Send, ExternalLink,
+  Download, ArrowUpCircle, Check, Send, ExternalLink, LogOut,
 } from "lucide-react";
 import { ADD_ONS, PLANS as STATIC_PLANS } from "@/lib/fincore/plans";
 
@@ -17,16 +18,33 @@ const TABS = [
 ];
 
 export default function DashboardShell({ workspaceId }) {
+  const router = useRouter();
   const [tab, setTab] = useState("overview");
   const [workspace, setWorkspace] = useState(null);
   const [status, setStatus] = useState("loading");
   const [plans, setPlans] = useState(STATIC_PLANS);
+  const [addOnCatalogue, setAddOnCatalogue] = useState(ADD_ONS);
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    setLoggingOut(true);
+    try {
+      await fetch("/api/fincore/logout", { method: "POST" });
+    } finally {
+      router.push("/fincore/login");
+      router.refresh();
+    }
+  }
 
   useEffect(() => {
     fetch("/api/fincore/plans")
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((data) => setPlans(data.plans))
       .catch(() => {}); // falls back to STATIC_PLANS, fine for display purposes
+    fetch("/api/fincore/addons")
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data) => setAddOnCatalogue(data.addOns))
+      .catch(() => {}); // falls back to the static ADD_ONS import, fine for display purposes
   }, []);
 
   useEffect(() => {
@@ -91,13 +109,33 @@ export default function DashboardShell({ workspaceId }) {
               {label}
             </button>
           ))}
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            style={{
+              display: "flex", alignItems: "center", gap: 10, padding: "10px 14px",
+              borderRadius: 10, border: "none", cursor: "pointer", textAlign: "left",
+              fontSize: 13.5, fontWeight: 600, marginTop: 8,
+              background: "transparent", color: "var(--e-ink-faint)",
+            }}
+          >
+            {loggingOut ? <Loader2 size={16} className="e-spin" /> : <LogOut size={16} strokeWidth={1.75} />}
+            Log out
+          </button>
         </nav>
       </aside>
 
       <div>
         {tab === "overview" && <Overview workspace={workspace} />}
         {tab === "billing" && <Billing workspace={workspace} plans={plans} />}
-        {tab === "modules" && <Modules workspace={workspace} />}
+        {tab === "modules" && (
+          <Modules
+            workspace={workspace}
+            workspaceId={workspaceId}
+            addOnCatalogue={addOnCatalogue}
+            onAddOnsChange={(nextAddOns) => setWorkspace((w) => (w ? { ...w, addOns: nextAddOns } : w))}
+          />
+        )}
         {tab === "team" && <Team workspace={workspace} />}
         {tab === "support" && <Support workspace={workspace} />}
       </div>
@@ -213,8 +251,32 @@ function Billing({ workspace, plans }) {
   );
 }
 
-function Modules({ workspace }) {
-  const [added, setAdded] = useState([]);
+function Modules({ workspace, workspaceId, addOnCatalogue, onAddOnsChange }) {
+  const [pending, setPending] = useState(null); // addonId currently saving
+  const [error, setError] = useState("");
+  const activeAddOns = workspace.addOns || [];
+
+  async function toggleAddOn(addonId, isActive) {
+    setError("");
+    setPending(addonId);
+    try {
+      const res = await fetch(`/api/fincore/workspace/${encodeURIComponent(workspaceId)}/addons`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ addonId, action: isActive ? "remove" : "add" }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error || "Could not update this add-on. Please try again.");
+        return;
+      }
+      onAddOnsChange(data.addOns);
+    } catch {
+      setError("Network error — please try again.");
+    } finally {
+      setPending(null);
+    }
+  }
 
   return (
     <>
@@ -229,19 +291,29 @@ function Modules({ workspace }) {
         </div>
       </Card>
       <Card title="Available add-ons">
+        {error && <span className="e-error" style={{ display: "block", marginBottom: 12 }}>{error}</span>}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }} className="e-wizard-2col">
-          {ADD_ONS.map((addon) => {
-            const isAdded = added.includes(addon.id);
+          {addOnCatalogue.map((addon) => {
+            const isAdded = activeAddOns.includes(addon.id);
+            const isPending = pending === addon.id;
             return (
               <div key={addon.id} className="e-card" style={{ padding: 16 }}>
-                <div style={{ fontSize: 13.5, fontWeight: 600 }}>{addon.name}</div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                  <div style={{ fontSize: 13.5, fontWeight: 600 }}>{addon.name}</div>
+                  {addon.price != null && (
+                    <div style={{ fontSize: 12.5, fontWeight: 600, color: "var(--e-primary)", whiteSpace: "nowrap" }}>
+                      ₹{addon.price.toLocaleString("en-IN")}<span style={{ color: "var(--e-ink-faint)", fontWeight: 400 }}>/mo</span>
+                    </div>
+                  )}
+                </div>
                 <div style={{ marginTop: 4, fontSize: 12, color: "var(--e-ink-mute)" }}>{addon.description}</div>
                 <button
-                  onClick={() => setAdded((v) => (isAdded ? v.filter((id) => id !== addon.id) : [...v, addon.id]))}
+                  onClick={() => toggleAddOn(addon.id, isAdded)}
+                  disabled={isPending}
                   className={`e-btn ${isAdded ? "e-btn-ghost" : "e-btn-primary"} e-btn-sm`}
                   style={{ marginTop: 12 }}
                 >
-                  {isAdded ? "Requested" : "Add module"}
+                  {isPending ? <Loader2 size={14} className="e-spin" /> : isAdded ? "Remove module" : "Add module"}
                 </button>
               </div>
             );

@@ -9,6 +9,14 @@ export const metadata = {
   title: "Terms & Conditions — PragnyX",
   description:
     "The terms that govern your use of the PragnyX website, services, and PragnyX Learning.",
+  alternates: { canonical: "https://pragnyx.in/terms-conditions" },
+  openGraph: {
+    title: "Terms & Conditions — PragnyX",
+    description:
+      "The terms that govern your use of the PragnyX website, services, and PragnyX Learning.",
+    url: "https://pragnyx.in/terms-conditions",
+    type: "website",
+  },
 };
 
 const SECTIONS = [

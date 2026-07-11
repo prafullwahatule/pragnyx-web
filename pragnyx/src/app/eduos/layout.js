@@ -6,6 +6,10 @@ export const metadata = {
   title: "PragnyX EduOS — The AI Operating System for Modern Educational Institutions",
   description:
     "One intelligent platform to manage admissions, academics, finance, communication, HR, placements, and every institutional workflow from a single system.",
+  // /eduos/page.js has no metadata of its own, so this is what the /eduos
+  // home page actually uses — every other page under /eduos/* sets its
+  // own alternates.canonical and overrides this.
+  alternates: { canonical: "https://pragnyx.in/eduos" },
   openGraph: {
     title: "PragnyX EduOS — The AI Operating System for Modern Educational Institutions",
     description:

@@ -11,6 +11,14 @@ export const metadata = {
   title: "Careers — PragnyX",
   description:
     "Open roles at PragnyX across engineering, design, and PragnyX Learning mentorship. Remote-first, async by default.",
+  alternates: { canonical: "https://pragnyx.in/careers" },
+  openGraph: {
+    title: "Careers — PragnyX",
+    description:
+      "Open roles at PragnyX across engineering, design, and PragnyX Learning mentorship. Remote-first, async by default.",
+    url: "https://pragnyx.in/careers",
+    type: "website",
+  },
 };
 
 export default async function CareersPage() {

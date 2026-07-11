@@ -9,6 +9,8 @@ function ApplyForm({ job, onClose }) {
   const [form, setForm] = useState({ name: "", email: "", note: "" });
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
+  // Honeypot — see Contact.jsx for the full explanation.
+  const [website, setWebsite] = useState("");
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -29,6 +31,7 @@ function ApplyForm({ job, onClose }) {
           name: form.name,
           email: form.email,
           note: form.note,
+          website,
         }),
       });
       const data = await res.json();
@@ -60,6 +63,16 @@ function ApplyForm({ job, onClose }) {
 
   return (
     <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
+      <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+      />
       <div className="grid sm:grid-cols-2 gap-4">
         <input
           name="name"

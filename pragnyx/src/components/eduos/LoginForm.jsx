@@ -9,31 +9,39 @@ export default function LoginForm({ initialWorkspace = "" }) {
   const router = useRouter();
   const [workspace, setWorkspace] = useState(initialWorkspace);
   const [password, setPassword] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot — real users never see or fill this
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!workspace.trim()) {
-      setError("Enter your workspace URL or institution code.");
+    if (!workspace.trim() || !password) {
+      setError("Enter your workspace URL and password.");
       return;
     }
     setLoading(true);
     setError("");
 
-    // Demo-mode login: looks up the provisioned workspace record so the
-    // flow is real end-to-end, but there is no session/auth layer wired
-    // up yet — that's the natural next step once a real DB/auth provider
-    // (e.g. NextAuth + Postgres) replaces the in-memory store.
     try {
-      const id = workspace.trim().includes(".") ? workspace.trim() : `${workspace.trim()}.pragnyx.in`;
-      const res = await fetch(`/api/eduos/workspace/${encodeURIComponent(id)}`);
+      const res = await fetch("/api/eduos/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ workspace: workspace.trim(), password, website }),
+      });
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError("We couldn't find that workspace. Check your institution code and try again.");
+        setError(data.error || "We couldn't log you in. Check your details and try again.");
         setLoading(false);
         return;
       }
-      router.push(`/eduos/dashboard?workspace=${encodeURIComponent(id)}`);
+      if (data.mustResetPassword) {
+        router.push("/eduos/reset-password");
+      } else if (!data.onboardingCompleted) {
+        router.push("/eduos/onboarding");
+      } else {
+        router.push("/eduos/dashboard");
+      }
+      router.refresh();
     } catch {
       setError("Something went wrong. Please try again.");
       setLoading(false);
@@ -65,11 +73,17 @@ export default function LoginForm({ initialWorkspace = "" }) {
             placeholder="abccollege or abccollege.pragnyx.in"
             value={workspace}
             onChange={(e) => setWorkspace(e.target.value)}
+            autoComplete="username"
           />
         </div>
         <div className="e-field">
           <label className="e-label" htmlFor="l-password">Password</label>
-          <input id="l-password" type="password" className="e-input" placeholder="Temporary or reset password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input id="l-password" type="password" className="e-input" placeholder="Temporary or reset password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
+        </div>
+        {/* Honeypot field — hidden from real users via CSS, bots that fill every input trip it. */}
+        <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}>
+          <label htmlFor="l-website">Website</label>
+          <input id="l-website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
         </div>
         {error && <span className="e-error">{error}</span>}
         <button type="submit" className="e-btn e-btn-primary e-btn-block" disabled={loading}>

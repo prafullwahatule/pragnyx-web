@@ -83,14 +83,18 @@ export const PLANS = [
   },
 ];
 
+// NOTE ON PRICING: same placeholder convention as PLANS above — these are
+// default monthly INR prices, overridable per-add-on from the admin panel
+// (Admin → EduOS → Pricing) via eduos_addon_prices. Swap for real numbers
+// before going live.
 export const ADD_ONS = [
-  { id: "workflow-builder", name: "Workflow Automation Builder", description: "IF-trigger → action chains for any module." },
-  { id: "advanced-analytics", name: "Advanced Analytics", description: "Department-wise comparisons & trend forecasting." },
-  { id: "report-builder", name: "Report Builder", description: "Custom report templates, scheduled exports." },
-  { id: "ai-suite", name: "AI Suite", description: "EduOS AI Copilot + natural-language search across records." },
-  { id: "extra-storage", name: "Extra Storage", description: "+100GB document & records storage." },
-  { id: "extra-ai-credits", name: "Extra AI Credits", description: "+2,000 AI Copilot credits / month." },
-  { id: "api-access", name: "API Access", description: "REST API keys for integrating third-party systems." },
+  { id: "workflow-builder", name: "Workflow Automation Builder", description: "IF-trigger → action chains for any module.", price: 999 },
+  { id: "advanced-analytics", name: "Advanced Analytics", description: "Department-wise comparisons & trend forecasting.", price: 1499 },
+  { id: "report-builder", name: "Report Builder", description: "Custom report templates, scheduled exports.", price: 999 },
+  { id: "ai-suite", name: "AI Suite", description: "EduOS AI Copilot + natural-language search across records.", price: 1999 },
+  { id: "extra-storage", name: "Extra Storage", description: "+100GB document & records storage.", price: 499 },
+  { id: "extra-ai-credits", name: "Extra AI Credits", description: "+2,000 AI Copilot credits / month.", price: 799 },
+  { id: "api-access", name: "API Access", description: "REST API keys for integrating third-party systems.", price: 1299 },
 ];
 
 export function getPlan(planId) {

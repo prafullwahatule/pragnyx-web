@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { getEffectivePlan } from "./effectivePlans";
 import { saveWorkspace, getWorkspace } from "@/lib/repo/eduos";
+import { sendWelcomeEmail, sendReceiptEmail } from "./emails";
 
 function slugify(name) {
   return (name || "institution")
@@ -46,7 +47,7 @@ async function resolveSubdomain(baseSlug, isTaken) {
  * and returns the record — the caller is responsible for emailing
  * credentials (see /api/eduos/checkout/verify).
  */
-export async function provisionWorkspace({ institution, plan: planId, addOns = [], paymentId }) {
+export async function provisionWorkspace({ institution, plan: planId, addOns = [], paymentId, orderId }) {
   const plan = await getEffectivePlan(planId);
   if (!plan) throw new Error(`Unknown plan: ${planId}`);
 
@@ -93,6 +94,7 @@ export async function provisionWorkspace({ institution, plan: planId, addOns = [
     },
     billing: {
       lastPaymentId: paymentId || null,
+      razorpayOrderId: orderId || null,
       amount: plan.price,
       currency: plan.currency,
       period: plan.billingPeriod,
@@ -113,9 +115,19 @@ export async function provisionWorkspace({ institution, plan: planId, addOns = [
 
   await saveWorkspace(record);
 
-  // SWAP POINT: send the real welcome email here via your ESP
-  // (Resend/Postmark/SES). Logged for now, consistent with how
-  // /api/contact and /api/learning-request already handle this in dev.
+  // Real transactional emails via Resend — wrapped so a flaky email
+  // provider can never block or fail workspace creation. sendEmail()
+  // itself never throws, but we still belt-and-suspenders it here since
+  // this is a critical path.
+  try {
+    await sendWelcomeEmail(record);
+    if (record.invoices[0]) {
+      await sendReceiptEmail({ workspace: record, invoice: record.invoices[0] });
+    }
+  } catch (err) {
+    console.error("[eduos] provisioning email failed", err);
+  }
+
   console.log("[eduos] workspace provisioned", {
     institutionId: record.institutionId,
     tenantId: record.tenantId,

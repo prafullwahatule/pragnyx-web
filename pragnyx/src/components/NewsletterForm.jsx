@@ -7,6 +7,8 @@ export default function NewsletterForm({ compact = false }) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | done | error
   const [error, setError] = useState("");
+  // Honeypot — see Contact.jsx for the full explanation.
+  const [website, setWebsite] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -17,7 +19,7 @@ export default function NewsletterForm({ compact = false }) {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, website }),
       });
       const data = await res.json();
 
@@ -45,6 +47,16 @@ export default function NewsletterForm({ compact = false }) {
 
   return (
     <form onSubmit={handleSubmit} className="mt-4">
+      <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+      />
       <div className="flex items-stretch gap-2">
         <input
           type="email"

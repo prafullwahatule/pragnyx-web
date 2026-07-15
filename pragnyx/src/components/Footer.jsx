@@ -128,11 +128,11 @@ export default function Footer() {
 
             <div className="mt-5 flex flex-col gap-2">
               <a
-                href="mailto:hello.pragnyx@gmail.com"
+                href="mailto:hello@pragnyx.in"
                 className="inline-flex items-center gap-2 text-sm text-mute hover:text-paper transition-colors"
               >
                 <Mail size={14} strokeWidth={1.5} />
-                hello.pragnyx@gmail.com
+                hello@pragnyx.in
               </a>
               <a
                 href={`tel:+91${WHATSAPP_NUMBER}`}
